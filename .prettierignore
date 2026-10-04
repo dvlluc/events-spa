@@ -1,0 +1,15 @@
+# Зависимости и артефакты сборки
+node_modules
+dist
+dist-ssr
+coverage
+test-results
+playwright-report
+public
+
+# Локальные файлы редактора
+.vscode
+
+# Лок-файлы и спецификация API
+pnpm-lock.yaml
+openapi
