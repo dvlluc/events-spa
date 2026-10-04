@@ -9,4 +9,5 @@ export const eventKeys = {
   all,
   lists: () => lists,
   list: (params: EventListParams) => [...lists, params] as const,
+  detail: (id: string) => [...all, EVENT_QUERY_KEY.DETAIL, id] as const,
 }

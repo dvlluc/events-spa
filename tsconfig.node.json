@@ -6,7 +6,9 @@
     "vitest.config.*",
     "playwright.config.*",
     "eslint.config.*",
-    "steiger.config.*"
+    "steiger.config.*",
+    "scripts/*",
+    "env.d.ts"
   ],
   "compilerOptions": {
     "module": "preserve",

@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
+    "seed": "node --env-file-if-exists=.env scripts/seed-mockapi.ts",
     "prepare": "husky",
     "test": "vitest run",
     "test:unit": "vitest run --project unit",
@@ -54,6 +55,7 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.3",
+    "@faker-js/faker": "^10.6.0",
     "@feature-sliced/steiger-plugin": "^0.8.0",
     "@playwright/test": "^1.63.0",
     "@tsconfig/node24": "^24.0.5",

@@ -59,6 +59,7 @@ export default defineConfigWithVueTs(
     '**/coverage/**',
     '**/test-results/**',
     '**/playwright-report/**',
+    '**/public/**',
   ]),
 
   ...pluginVue.configs['flat/essential'],

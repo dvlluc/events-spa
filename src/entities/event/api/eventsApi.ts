@@ -8,6 +8,7 @@ import { EventListSchema, EventSchema } from '../model/schemas'
 import type { EventItem, EventListParams, EventPayload } from '../model/types'
 
 export type EventListRequest = EventListParams & { signal?: AbortSignal }
+export type EventGetRequest = { signal?: AbortSignal }
 
 function parse<S extends z.ZodType>(schema: S, data: unknown): z.infer<S> {
   const result = schema.safeParse(data)
@@ -31,6 +32,11 @@ export const eventsApi = {
       if (error instanceof ApiError && error.status === HTTP.NOT_FOUND_STATUS) return []
       throw error
     }
+  },
+
+  async get(id: string, { signal }: EventGetRequest = {}): Promise<EventItem> {
+    const data = await request<unknown>(eventPath(id), signal ? { signal } : {})
+    return parse(EventSchema, data)
   },
 
   async create(payload: EventPayload): Promise<EventItem> {

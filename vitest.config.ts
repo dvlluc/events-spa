@@ -16,7 +16,7 @@ const COVERAGE_THRESHOLDS = {
  * VITE_API_BASE_URL для тестов: тесты не ходят в сеть, нужен только валидный
  * http(s)-URL, чтобы shared/config/env.ts не падал при импорте без .env.
  */
-const TEST_API_BASE_URL = 'http://localhost/api/v1'
+const TEST_API_BASE_URL = 'http://localhost:3000/api/v1'
 
 const testConfig = {
   optimizeDeps: {
@@ -28,6 +28,7 @@ const testConfig = {
     coverage: {
       provider: 'v8',
       thresholds: COVERAGE_THRESHOLDS,
+      exclude: ['mocks/**'],
     },
 
     projects: [

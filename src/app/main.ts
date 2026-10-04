@@ -15,4 +15,12 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 
-app.mount('#app')
+async function mount(): Promise<void> {
+  if (import.meta.env.MODE === 'e2e') {
+    const { worker } = await import('@mocks/browser')
+    await worker.start()
+  }
+  app.mount('#app')
+}
+
+void mount()

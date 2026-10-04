@@ -117,6 +117,48 @@ test('list: нарушение контракта превращается в Co
   expect(error).not.toBeInstanceOf(ApiError)
 })
 
+test('get запрашивает /events/{id} без заголовков и валидирует ответ', async () => {
+  fetchMock.mockResolvedValue(jsonResponse(event))
+
+  const found = await eventsApi.get(event.id)
+
+  const [url, init] = callAt(0)
+  expect(url).toBe(`${env.VITE_API_BASE_URL}/events/${event.id}`)
+  expect(init.method).toBe('GET')
+  expect(init.headers).toBeUndefined()
+  expect(init.body).toBeUndefined()
+  expect(found).toEqual(event)
+})
+
+test('get передаёт внешний signal', async () => {
+  hangUntilAbort()
+  const controller = new AbortController()
+
+  const promise = failure(eventsApi.get(event.id, { signal: controller.signal }))
+  controller.abort()
+  const error = await promise
+
+  expect(error).toBeInstanceOf(DOMException)
+  expect((error as DOMException).name).toBe('AbortError')
+})
+
+test('get: 404 пробрасывается как ApiError (не пустой список)', async () => {
+  fetchMock.mockResolvedValue(jsonResponse({ message: 'Not found' }, 404))
+
+  const error = await failure(eventsApi.get('missing'))
+
+  expect(error).toBeInstanceOf(ApiError)
+  expect((error as ApiError).status).toBe(404)
+})
+
+test('get: нарушение контракта превращается в ContractError', async () => {
+  fetchMock.mockResolvedValue(jsonResponse({ ...event, durationMinutes: '35' }))
+
+  const error = await failure(eventsApi.get(event.id))
+
+  expect(error).toBeInstanceOf(ContractError)
+})
+
 test('create отправляет JSON с телом и возвращает событие', async () => {
   fetchMock.mockResolvedValue(jsonResponse({ ...event, id: '13' }, 201))
 

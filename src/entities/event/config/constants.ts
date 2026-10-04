@@ -24,6 +24,7 @@ export const DURATION_FORMAT = {
 export const EVENT_QUERY_KEY = {
   ROOT: 'events',
   LIST: 'list',
+  DETAIL: 'detail',
 } as const
 
 export const EVENT_SCHEMA = {
