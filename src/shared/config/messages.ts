@@ -4,3 +4,7 @@ export const ENV_MESSAGES = {
     'VITE_API_BASE_URL обязателен и должен быть http(s)-URL вида https://host/api/v1.',
   HINT: 'Скопируйте .env.example в .env, заполните VITE_API_BASE_URL и перезапустите dev-сервер.',
 } as const
+
+export const APP_MESSAGES = {
+  TITLE: 'События',
+} as const

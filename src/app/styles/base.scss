@@ -1,0 +1,123 @@
+@use './mixins' as *;
+@use './themes' as *;
+
+body {
+  min-height: 100dvh;
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+header {
+  padding-block: space(3);
+  border-bottom: 1px solid var(--border);
+  background-color: var(--surface);
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+label {
+  display: block;
+  margin-bottom: space(1);
+  font-weight: 500;
+}
+
+input,
+textarea,
+select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: space(2) space(3);
+  border: 1px solid var(--border);
+  border-radius: $radius;
+  background-color: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary);
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+textarea {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+.field-error {
+  margin-top: space(1);
+  color: var(--danger);
+  font-size: 0.8125rem;
+}
+
+button {
+  padding: space(2) space(4);
+  border: 1px solid var(--border);
+  border-radius: $radius;
+  background-color: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+button:not(:disabled):hover {
+  filter: brightness(0.95);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+button[data-variant='primary'] {
+  border-color: var(--primary);
+  background-color: var(--primary);
+  color: var(--primary-text);
+}
+
+button[data-variant='danger'] {
+  border-color: var(--danger);
+  background-color: var(--danger);
+  color: var(--danger-text);
+}
+
+dialog {
+  margin: auto;
+  padding: space(6);
+  border: 1px solid var(--border);
+  border-radius: $radius;
+  background-color: var(--surface);
+  color: var(--text);
+}
+
+dialog::backdrop {
+  background-color: color-mix(in srgb, var(--text) 45%, transparent);
+}

@@ -2,4 +2,5 @@ export const HTTP = { TIMEOUT_MS: 10_000, RETRY_COUNT: 2, RETRY_BASE_DELAY_MS: 5
 
 export const QUERY = { STALE_TIME_MS: 30_000, GC_TIME_MS: 300_000 } as const
 
+// Связано с _themes.scss (темы задаются там) — необходимо менять вместе.
 export const THEME = { DEFAULT: 'light', ATTRIBUTE: 'data-theme' } as const

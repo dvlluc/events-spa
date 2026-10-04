@@ -22,4 +22,12 @@ export default {
     'at-rule-no-unknown': [true, { ignoreAtRules: TAILWIND_AT_RULES }],
     'scss/at-rule-no-unknown': [true, { ignoreAtRules: TAILWIND_AT_RULES }],
   },
+  overrides: [
+    {
+      files: ['**/*.scss', '**/*.vue'],
+      rules: {
+        'at-rule-no-unknown': null,
+      },
+    },
+  ],
 }

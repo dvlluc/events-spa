@@ -1,0 +1,47 @@
+@use 'sass:map';
+
+// Темы задаются здесь; связано с THEME в shared/config/constants.ts — необходимо менять вместе.
+$themes: (
+  light: (
+    bg: #f6f7f9,
+    surface: #fff,
+    text: #1c2430,
+    muted: #6b7686,
+    border: #d9dee6,
+    primary: #2563eb,
+    primary-text: #fff,
+    danger: #dc2626,
+    danger-text: #fff,
+  ),
+  dark: (
+    bg: #0f172a,
+    surface: #1e293b,
+    text: #f8fafc,
+    muted: #94a3b8,
+    border: #334155,
+    primary: #3b82f6,
+    primary-text: #fff,
+    danger: #ef4444,
+    danger-text: #fff,
+  ),
+);
+$radius: 0.5rem;
+$space: (
+  1: 0.25rem,
+  2: 0.5rem,
+  3: 0.75rem,
+  4: 1rem,
+  6: 1.5rem,
+);
+
+@function space($step) {
+  @return map.get($space, $step);
+}
+
+@each $name, $tokens in $themes {
+  :root[data-theme='#{$name}'] {
+    @each $key, $value in $tokens {
+      --#{$key}: #{$value};
+    }
+  }
+}
