@@ -8,3 +8,10 @@ export const ENV_MESSAGES = {
 export const APP_MESSAGES = {
   TITLE: 'События',
 } as const
+
+export const HTTP_MESSAGES = {
+  API_ERROR: (status: number) => `Сервер ответил ошибкой ${status}.`,
+  NETWORK: 'Не удалось связаться с сервером: проблема с сетью.',
+  TIMEOUT: 'Сервер не ответил за отведённое время.',
+  CONTRACT: 'Сервер вернул данные неожиданного формата.',
+} as const
