@@ -14,4 +14,10 @@ export default defineConfig([
       'fsd/no-segmentless-slices': 'off',
     },
   },
+  {
+    files: ['./src/app/providers.ts'],
+    rules: {
+      'fsd/segments-by-purpose': 'off',
+    },
+  },
 ])
