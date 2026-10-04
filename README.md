@@ -53,8 +53,17 @@ pnpm format
 
 ### Тесты
 
+Для browser mode один раз установите браузер:
+
 ```sh
-pnpm test:unit
+pnpm exec playwright install chromium
+```
+
+```sh
+pnpm test            # unit + component
+pnpm test:unit       # только unit (happy-dom)
+pnpm test:component  # только component (Browser Mode, Chromium)
+pnpm test:coverage   # с отчётом покрытия (./coverage)
 ```
 
 End-to-end (Playwright):
