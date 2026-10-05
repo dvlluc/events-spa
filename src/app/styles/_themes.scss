@@ -26,6 +26,8 @@ $themes: (
   ),
 );
 $radius: 0.5rem;
+$motion-fast: 150ms;
+$fill-subtle: color-mix(in srgb, var(--border) 35%, transparent);
 $space: (
   1: 0.25rem,
   2: 0.5rem,
@@ -40,6 +42,8 @@ $space: (
 
 @each $name, $tokens in $themes {
   :root[data-theme='#{$name}'] {
+    color-scheme: $name;
+
     @each $key, $value in $tokens {
       --#{$key}: #{$value};
     }

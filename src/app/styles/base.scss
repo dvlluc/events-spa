@@ -1,6 +1,16 @@
 @use './mixins' as *;
 @use './themes' as *;
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 @layer base {
   body {
     min-height: 100dvh;
@@ -48,15 +58,29 @@
 
   input,
   textarea,
-  select {
-    box-sizing: border-box;
-    width: 100%;
-    padding: space(2) space(3);
+  select,
+  output,
+  button,
+  dialog,
+  .event-list {
     border: 1px solid var(--border);
     border-radius: $radius;
     background-color: var(--surface);
     color: var(--text);
+  }
+
+  input,
+  textarea,
+  select,
+  button {
     font: inherit;
+  }
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: space(2) space(3);
   }
 
   input:focus,
@@ -74,12 +98,8 @@
 
   output {
     display: block;
-    box-sizing: border-box;
     padding: space(2) space(3);
-    border: 1px solid var(--border);
-    border-radius: $radius;
-    background-color: color-mix(in srgb, var(--border) 35%, transparent);
-    color: var(--text);
+    background-color: $fill-subtle;
     font-variant-numeric: tabular-nums;
   }
 
@@ -98,11 +118,6 @@
 
   button {
     padding: space(2) space(4);
-    border: 1px solid var(--border);
-    border-radius: $radius;
-    background-color: var(--surface);
-    color: var(--text);
-    font: inherit;
     font-weight: 500;
     cursor: pointer;
   }
@@ -138,15 +153,10 @@
   dialog {
     --modal-width: 30rem;
 
-    box-sizing: border-box;
     width: calc(100% - 2rem);
     max-width: var(--modal-width);
     margin: auto;
     padding: space(6);
-    border: 1px solid var(--border);
-    border-radius: $radius;
-    background-color: var(--surface);
-    color: var(--text);
   }
 
   dialog[data-size='wide'] {
@@ -157,20 +167,12 @@
     background-color: color-mix(in srgb, var(--text) 45%, transparent);
   }
 
-  .event-list {
-    border: 1px solid var(--border);
-    border-radius: $radius;
-    background-color: var(--surface);
-  }
-
   .event-row {
-    box-sizing: border-box;
     padding: space(3);
     border-bottom: 1px solid var(--border);
   }
 
   .event-row:last-child {
-    margin-bottom: 0;
     border-bottom: none;
   }
 
@@ -194,7 +196,7 @@
     padding: space(1) space(2);
     border: 1px solid var(--border);
     border-radius: $radius;
-    background-color: color-mix(in srgb, var(--border) 35%, transparent);
+    background-color: $fill-subtle;
     color: var(--text);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
@@ -237,5 +239,13 @@
   .pager-gap {
     padding-inline: space(1);
     color: var(--muted);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    dialog[open],
+    dialog::backdrop,
+    .event-list {
+      animation: fade-in $motion-fast ease-out;
+    }
   }
 }
