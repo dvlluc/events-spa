@@ -11,7 +11,7 @@ import { computed, useId, type VNode } from 'vue'
 
 type FormControl = {
   id: string
-  'aria-invalid'?: string | undefined
+  'aria-invalid'?: boolean | 'true' | 'false' | 'grammar' | 'spelling' | undefined
   'aria-describedby'?: string | undefined
 }
 

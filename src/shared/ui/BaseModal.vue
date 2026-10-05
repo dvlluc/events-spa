@@ -1,5 +1,11 @@
 <template>
-  <dialog ref="dialog" :aria-labelledby="titleId" @keydown="onKeydown" @cancel="onCancel">
+  <dialog
+    ref="dialog"
+    :data-size="size"
+    :aria-labelledby="titleId"
+    @keydown="onKeydown"
+    @cancel="onCancel"
+  >
     <div class="flex items-start justify-between gap-4">
       <h2 class="text-xl font-semibold" :id="titleId">{{ title }}</h2>
       <button type="button" :aria-label="UI_MESSAGES.CLOSE" @click="requestClose">×</button>
@@ -19,6 +25,7 @@ import { UI_MESSAGES } from '@/shared/config'
 const props = defineProps<{
   title: string
   busy?: boolean | undefined
+  size?: 'wide' | undefined
 }>()
 
 const emit = defineEmits<{ close: [] }>()

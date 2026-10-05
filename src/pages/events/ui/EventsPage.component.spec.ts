@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw/http'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { render } from 'vitest-browser-vue'
+import { userEvent } from 'vitest/browser'
 
 import { worker } from '@mocks/browser'
 import { MOCK_HTTP } from '@mocks/constants'
@@ -11,7 +12,7 @@ import { formatDateTime, formatDuration, type EventItem } from '@/entities/event
 import { STATE_MESSAGES, UI_MESSAGES } from '@/shared/config'
 
 import { PAGINATION, SORT, VIRTUALIZATION } from '../config/constants'
-import { PAGER_MESSAGES } from '../config/messages'
+import { LIST_MESSAGES, PAGER_MESSAGES } from '../config/messages'
 import { useListStore } from '../model/listStore'
 import EventsPage from './EventsPage.vue'
 
@@ -162,6 +163,60 @@ test('ошибка загрузки — alert и «Повторить» возв
   worker.resetHandlers()
   await screen.getByRole('button', { name: UI_MESSAGES.RETRY }).click()
 
+  await expect
+    .element(screen.getByRole('listitem'), WAIT)
+    .toHaveLength(PAGINATION.DEFAULT_PAGE_SIZE)
+})
+
+test('«Создать» и «Редактировать» открывают форму, Esc закрывает её', async () => {
+  const screen = await renderPage()
+  await expect
+    .element(screen.getByRole('listitem'), WAIT)
+    .toHaveLength(PAGINATION.DEFAULT_PAGE_SIZE)
+  const first = firstEvent()
+
+  await screen.getByRole('button', { name: LIST_MESSAGES.CREATE }).click()
+
+  const createDialog = screen.getByRole('dialog')
+  await expect.element(createDialog, WAIT).toBeVisible()
+  await expect.element(createDialog.getByRole('textbox').first(), WAIT).toHaveValue('')
+
+  await userEvent.keyboard('{Escape}')
+  await expect.element(screen.getByRole('dialog'), WAIT).not.toBeInTheDocument()
+
+  await screen
+    .getByRole('listitem')
+    .first()
+    .getByRole('button', { name: LIST_MESSAGES.EDIT })
+    .click()
+
+  const editDialog = screen.getByRole('dialog')
+  await expect.element(editDialog, WAIT).toBeVisible()
+  await expect.element(editDialog.getByRole('textbox').first(), WAIT).toHaveValue(first.title)
+
+  await userEvent.keyboard('{Escape}')
+  await expect.element(screen.getByRole('dialog'), WAIT).not.toBeInTheDocument()
+})
+
+test('удаление последнего элемента страницы > 1 — автопереход назад', async () => {
+  db.reset(PAGINATION.DEFAULT_PAGE_SIZE + 1)
+  const screen = await renderPage((store) => store.setPage(PAGINATION.DEFAULT_PAGE + 1))
+
+  await expect.element(screen.getByRole('listitem'), WAIT).toHaveLength(1)
+
+  await screen.getByRole('listitem').getByRole('button', { name: LIST_MESSAGES.DELETE }).click()
+
+  const dialog = screen.getByRole('dialog')
+  await expect.element(dialog, WAIT).toBeVisible()
+  await dialog.getByRole('button', { name: LIST_MESSAGES.DELETE }).click()
+
+  await expect.element(screen.getByRole('dialog'), WAIT).not.toBeInTheDocument()
+  await expect
+    .element(
+      screen.getByRole('button', { name: PAGER_MESSAGES.PAGE(PAGINATION.DEFAULT_PAGE) }),
+      WAIT,
+    )
+    .toHaveAttribute('aria-current', 'page')
   await expect
     .element(screen.getByRole('listitem'), WAIT)
     .toHaveLength(PAGINATION.DEFAULT_PAGE_SIZE)

@@ -72,6 +72,24 @@
     resize: vertical;
   }
 
+  output {
+    display: block;
+    box-sizing: border-box;
+    padding: space(2) space(3);
+    border: 1px solid var(--border);
+    border-radius: $radius;
+    background-color: color-mix(in srgb, var(--border) 35%, transparent);
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  output[data-hint] {
+    border-style: dashed;
+    background-color: transparent;
+    color: var(--muted);
+    font-style: italic;
+  }
+
   .field-error {
     margin-top: space(1);
     color: var(--danger);
@@ -118,12 +136,21 @@
   }
 
   dialog {
+    --modal-width: 30rem;
+
+    box-sizing: border-box;
+    width: calc(100% - 2rem);
+    max-width: var(--modal-width);
     margin: auto;
     padding: space(6);
     border: 1px solid var(--border);
     border-radius: $radius;
     background-color: var(--surface);
     color: var(--text);
+  }
+
+  dialog[data-size='wide'] {
+    --modal-width: 40rem;
   }
 
   dialog::backdrop {
