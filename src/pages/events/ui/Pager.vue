@@ -32,7 +32,7 @@ function onPageSizeChange(event: Event): void {
 </script>
 
 <template>
-  <nav class="flex flex-wrap items-center justify-end gap-2" :aria-label="PAGER_MESSAGES.NAV_LABEL">
+  <nav class="pager" :aria-label="PAGER_MESSAGES.NAV_LABEL">
     <button
       type="button"
       :disabled="isFirstPage"
@@ -62,8 +62,8 @@ function onPageSizeChange(event: Event): void {
       →
     </button>
     <span class="sr-only" aria-live="polite">{{ PAGER_MESSAGES.PAGE(page) }}</span>
-    <label class="mb-0 flex items-center gap-2">
-      {{ PAGER_MESSAGES.PAGE_SIZE_LABEL }}
+    <label class="pager-size">
+      <span class="pager-label">{{ PAGER_MESSAGES.PAGE_SIZE_LABEL }}</span>
       <span class="select-wrap">
         <select class="w-auto" :value="pageSize" @change="onPageSizeChange">
           <option v-for="size in PAGINATION.PAGE_SIZE_OPTIONS" :key="size" :value="size">

@@ -8,7 +8,7 @@ import { MOCK_HTTP } from '@mocks/constants'
 import { db } from '@mocks/db'
 import { createTestContext } from '@mocks/test-utils'
 
-import { formatDateTime, formatDuration, type EventItem } from '@/entities/event'
+import { eventKeys, formatDateTime, formatDuration, type EventItem } from '@/entities/event'
 import { STATE_MESSAGES, UI_MESSAGES } from '@/shared/config'
 
 import { PAGINATION, SORT, VIRTUALIZATION } from '../config/constants'
@@ -221,3 +221,47 @@ test('удаление последнего элемента страницы > 
     .element(screen.getByRole('listitem'), WAIT)
     .toHaveLength(PAGINATION.DEFAULT_PAGE_SIZE)
 })
+
+function countRowUpdates(): { counter: { count: number }; mixin: { updated(): void } } {
+  const counter = { count: 0 }
+  const mixin = {
+    updated(this: { $el: unknown }): void {
+      const element = this.$el
+      if (element instanceof Element && element.classList.contains('event-row')) {
+        counter.count += 1
+      }
+    },
+  }
+  return { counter, mixin }
+}
+
+test(
+  'профилирование: строки не перерисовываются при несвязанных изменениях',
+  SLOW_TEST,
+  async () => {
+    db.reset(PAGINATION.DEFAULT_PAGE_SIZE)
+    const { counter, mixin } = countRowUpdates()
+    const { plugins, queryClient } = createTestContext({ staleTime: Infinity })
+    const screen = await render(EventsPage, { global: { plugins, mixins: [mixin] } })
+
+    await expect
+      .element(screen.getByRole('listitem'), WAIT)
+      .toHaveLength(PAGINATION.DEFAULT_PAGE_SIZE)
+    expect(counter.count).toBe(0)
+
+    await screen.getByRole('button', { name: LIST_MESSAGES.CREATE }).click()
+    await expect.element(screen.getByRole('dialog'), WAIT).toBeVisible()
+    expect(counter.count).toBe(0)
+
+    await userEvent.keyboard('{Escape}')
+    await expect.element(screen.getByRole('dialog'), WAIT).not.toBeInTheDocument()
+    expect(counter.count).toBe(0)
+
+    const changed = firstEvent()
+    db.update(changed.id, { ...changed, description: 'обновлено при инвалидации' })
+    await queryClient.invalidateQueries({ queryKey: eventKeys.lists() })
+    await vi.waitFor(() => expect(counter.count).toBeGreaterThan(0), {
+      timeout: SLOW_WAIT.timeout,
+    })
+  },
+)

@@ -10,6 +10,7 @@ test('createQueryClient ставит staleTime и gcTime из QUERY и откл�
   expect(queries?.staleTime).toBe(QUERY.STALE_TIME_MS)
   expect(queries?.gcTime).toBe(QUERY.GC_TIME_MS)
   expect(queries?.retry).toBe(false)
+  expect(queries?.refetchOnWindowFocus).toBe(QUERY.REFETCH_ON_WINDOW_FOCUS)
 })
 
 test('createQueryClient применяет переопределения поверх дефолтов', () => {
@@ -18,4 +19,5 @@ test('createQueryClient применяет переопределения пов
   expect(queries?.gcTime).toBe(0)
   expect(queries?.staleTime).toBe(QUERY.STALE_TIME_MS)
   expect(queries?.retry).toBe(false)
+  expect(queries?.refetchOnWindowFocus).toBe(QUERY.REFETCH_ON_WINDOW_FOCUS)
 })

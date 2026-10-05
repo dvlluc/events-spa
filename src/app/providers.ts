@@ -11,6 +11,7 @@ export function createQueryClient(overrides: QueryClientOverrides = {}): QueryCl
         staleTime: QUERY.STALE_TIME_MS,
         gcTime: QUERY.GC_TIME_MS,
         retry: false,
+        refetchOnWindowFocus: QUERY.REFETCH_ON_WINDOW_FOCUS,
         ...overrides,
       },
     },

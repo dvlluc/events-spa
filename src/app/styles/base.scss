@@ -168,8 +168,29 @@
   }
 
   .event-row {
+    display: flex;
+    align-items: center;
+    gap: space(4);
     padding: space(3);
     border-bottom: 1px solid var(--border);
+    content-visibility: auto;
+  }
+
+  .event-row-main {
+    min-width: 0;
+    flex-grow: 1;
+  }
+
+  .event-row-meta {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: space(4);
+  }
+
+  .event-row-actions {
+    display: flex;
+    gap: space(2);
   }
 
   .event-row:last-child {
@@ -236,9 +257,89 @@
     border-color: var(--primary);
   }
 
+  .pager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: space(2);
+  }
+
+  .pager-size {
+    display: flex;
+    align-items: center;
+    gap: space(2);
+    margin-bottom: 0;
+  }
+
   .pager-gap {
     padding-inline: space(1);
     color: var(--muted);
+  }
+
+  @media (max-width: $bp) {
+    .event-row {
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: space(1) space(4);
+      padding: space(1) space(2);
+    }
+
+    .event-row-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .event-row-description {
+      display: none;
+    }
+
+    .event-row-meta {
+      width: 100%;
+      flex-wrap: wrap;
+      gap: space(1) space(3);
+    }
+
+    .event-row-dates {
+      padding: 0 space(1);
+      font-size: 0.8125rem;
+    }
+
+    .event-row-duration {
+      font-size: 0.8125rem;
+    }
+
+    .event-row-actions button {
+      padding: space(1) space(2);
+      font-size: 0.8125rem;
+    }
+
+    .pager {
+      width: 100%;
+      justify-content: center;
+      gap: space(1);
+    }
+
+    .pager-size {
+      gap: space(1);
+    }
+
+    .pager-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .pager button {
+      padding: space(1) space(2);
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {

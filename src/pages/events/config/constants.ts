@@ -9,7 +9,7 @@ export const VIRTUALIZATION = {
   THRESHOLD: 50,
   ROW_HEIGHT_PX: 96,
   ROW_GAP_PX: 8,
-  OVERSCAN: 8,
+  OVERSCAN: 4,
   VIEWPORT_MAX_HEIGHT_VH: 70,
 } as const
 
