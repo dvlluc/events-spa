@@ -13,4 +13,4 @@ export const VIRTUALIZATION = {
   VIEWPORT_MAX_HEIGHT_VH: 70,
 } as const
 
-export const SORT = { DEFAULT_FIELD: 'startAt', DEFAULT_ORDER: 'desc' } as const
+export const SORT = { DEFAULT_FIELD: 'startAt', DEFAULT_ORDER: 'asc' } as const
