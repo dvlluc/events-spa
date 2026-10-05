@@ -2,13 +2,17 @@
   <img src="./public/favicon.svg" alt="events-spa logo" width="64" height="64" />
 </p>
 
-# events-spa
+# Events SPA
 
-SPA «События»: список событий с серверной пагинацией, модальные CRUD-операции. [Демо](https://events-spa.vercel.app/).
+SPA для управления событиями (CRUD): список с серверной пагинацией, создание, редактирование и удаление через модальные окна. [Демо](https://events-spa.vercel.app/).
+
+## Стек
+
+Vue 3 · Vite · TypeScript · Pinia · TanStack Query · TanStack Virtual · Zod · Tailwind CSS 4 (раскладка) · SCSS (темы) · Vitest · Playwright · MSW
 
 ## Фактические версии
 
-Источник правды — `package.json` (для Node/pnpm — текущее окружение, см. `.nvmrc` и `engines`).
+Источник правды — `package.json`.
 
 | Пакет                         | Версия                       |
 | ----------------------------- | ---------------------------- |
@@ -24,55 +28,63 @@ SPA «События»: список событий с серверной паг
 | vitest                        | ^5.0.3                       |
 | playwright (@playwright/test) | ^1.63.0                      |
 | node                          | 24.18.0 (LTS, `.nvmrc` = 24) |
-| pnpm                          | 12.8.1                       |
+| pnpm                          | 12.8.1 (`packageManager`)    |
 
-## Setup
+## Требования
 
-```sh
+- Node.js 24 LTS (`.nvmrc`)
+- pnpm (версия в `packageManager`)
+
+## Запуск
+
+```bash
 pnpm install
 cp .env.example .env
-```
-
-Без `.env` приложение не стартует и печатает ошибку по переменной `VITE_API_BASE_URL`.
-
-### Разработка
-
-```sh
 pnpm dev
 ```
 
-### Type-check и сборка
+Без `.env` приложение не стартует: нужен `VITE_API_BASE_URL`.
 
-```sh
-pnpm type-check
-pnpm build
-```
+Для тестов один раз: `pnpm exec playwright install chromium`.
 
-### Линтеры
+## Скрипты
 
-```sh
-pnpm lint
-pnpm format
-```
+| Команда                                                           | Назначение                                     |
+| ----------------------------------------------------------------- | ---------------------------------------------- |
+| `pnpm dev`                                                        | dev-сервер                                     |
+| `pnpm build` / `pnpm preview`                                     | сборка / просмотр сборки                       |
+| `pnpm lint` / `pnpm lint:style` / `pnpm lint:fsd` / `pnpm format` | ESLint+Oxlint / Stylelint / Steiger / Prettier |
+| `pnpm type-check`                                                 | vue-tsc                                        |
+| `pnpm test:unit` / `pnpm test:component` / `pnpm test:e2e`        | тесты                                          |
+| `pnpm test`                                                       | все тесты: unit + component + e2e              |
+| `pnpm seed`                                                       | наполнить реальный mockapi тестовыми событиями |
 
-### Тесты
+## Бэкенд
 
-Для browser mode один раз установите браузер:
+mockapi.io, контракт — `openapi-specification.yaml`. Базовый URL в `VITE_API_BASE_URL`.
+API не возвращает общее количество записей, поэтому пагинация «Назад / Вперёд» с выбором размера страницы (5, 10, 20, 50, 100).
+Страница за пределами диапазона возвращает `[]`; список не даёт уйти за последнюю страницу (пробный запрос следующей), а на пустой ответ страницы > 1 происходит откат на шаг назад.
 
-```sh
-pnpm exec playwright install chromium
-```
+Ресурс mockapi ограничен 100 записями: `pnpm seed` добавляет 50 событий и завершится ошибкой 400 «Max number of elements reached», если свободного места меньше.
 
-```sh
-pnpm test            # unit + component + e2e
-pnpm test:unit       # только unit (happy-dom)
-pnpm test:component  # только component (Browser Mode, Chromium)
-pnpm test:coverage   # с отчётом покрытия (./coverage)
-```
+## Архитектура
 
-End-to-end (Playwright):
+Feature-Sliced Design: `app → pages → features → entities → shared`. Страница `pages/events`, фичи `event-form` и `event-delete`, сущность `entities/event`. Импорты только вниз, наружу из слайса через `index.ts`. Границы проверяют ESLint и Steiger.
 
-```sh
-pnpm exec playwright install chromium
-pnpm test:e2e
-```
+## Константы и темы
+
+- Пагинация, виртуализация, сортировка: `src/pages/events/config/constants.ts`
+- Валидация формы: `src/features/event-form/config/constants.ts`
+- Форматирование дат: `src/entities/event/config/constants.ts`
+- HTTP, кэш, тема по умолчанию: `src/shared/config/constants.ts`
+- Тема = запись в `$themes` (`src/app/styles/_themes.scss`)
+- Виртуализация включается, когда на странице больше `VIRTUALIZATION.THRESHOLD` (50) элементов
+
+## Качество
+
+Pre-commit: lint-staged (ESLint, Oxlint, Stylelint, Prettier), commit-msg: commitlint (Conventional Commits), pre-push: type-check + lint:fsd + unit-тесты.
+CI: `.github/workflows/ci.yml` — install (кэш pnpm) → lint → lint:fsd → type-check → test → build → e2e.
+
+## Развёртывание
+
+Статика — готовый `dist/`. Рекомендуемые заголовки хостинга: brotli/gzip-сжатие; для файлов `dist/assets/*` (имена с хэшем) — `Cache-Control: public, max-age=31536000, immutable`, для `index.html` — `no-cache` (в нём имена бандлов).
