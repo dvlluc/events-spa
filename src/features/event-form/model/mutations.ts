@@ -28,8 +28,8 @@ export function useUpdateEventMutation() {
 
   return useMutation<EventItem, Error, UpdateEventInput>({
     mutationFn: ({ id, payload }) => eventsApi.update(id, payload),
-    onSuccess: (_event, { id }) => {
-      void queryClient.invalidateQueries({ queryKey: eventKeys.detail(id) })
+    onSuccess: (event, { id }) => {
+      queryClient.setQueryData(eventKeys.detail(id), event)
       void invalidateEventLists()
     },
   })
