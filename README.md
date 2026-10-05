@@ -1,6 +1,10 @@
+<p align="center">
+  <img src="./public/favicon.svg" alt="events-spa logo" width="64" height="64" />
+</p>
+
 # events-spa
 
-SPA «События»: список событий с серверной пагинацией, модальные CRUD-операции.
+SPA «События»: список событий с серверной пагинацией, модальные CRUD-операции. [Демо](https://events-spa.vercel.app/).
 
 ## Фактические версии
 
