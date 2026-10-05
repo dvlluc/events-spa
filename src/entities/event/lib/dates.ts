@@ -10,6 +10,9 @@ export function localInputToIso(localInput: string): string {
   return new Date(localInput).toISOString()
 }
 
+let dateTimeFormatter: Intl.DateTimeFormat | undefined
+
 export function formatDateTime(iso: string): string {
-  return new Intl.DateTimeFormat(DATE_FORMAT.LOCALE, DATE_FORMAT.OPTIONS).format(new Date(iso))
+  dateTimeFormatter ??= new Intl.DateTimeFormat(DATE_FORMAT.LOCALE, DATE_FORMAT.OPTIONS)
+  return dateTimeFormatter.format(new Date(iso))
 }
