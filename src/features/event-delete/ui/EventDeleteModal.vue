@@ -1,23 +1,3 @@
-<template>
-  <BaseModal :title="title" :busy="isPending" @close="emit('close')">
-    <template #body>
-      <div class="flex flex-col gap-3">
-        <p v-if="deleteError" class="field-error" role="alert">{{ deleteError }}</p>
-        <p>{{ EVENT_DELETE_MESSAGES.PROMPT }}</p>
-      </div>
-    </template>
-
-    <template #footer>
-      <button type="button" data-variant="danger" :disabled="isPending" @click="onConfirm">
-        {{ EVENT_DELETE_MESSAGES.CONFIRM }}
-      </button>
-      <button type="button" :disabled="isPending" @click="emit('close')">
-        {{ EVENT_DELETE_MESSAGES.CANCEL }}
-      </button>
-    </template>
-  </BaseModal>
-</template>
-
 <script setup lang="ts">
 import { computed, shallowRef } from 'vue'
 
@@ -49,3 +29,23 @@ async function onConfirm(): Promise<void> {
   }
 }
 </script>
+
+<template>
+  <BaseModal :title="title" :busy="isPending" @close="emit('close')">
+    <template #body>
+      <div class="flex flex-col gap-3">
+        <p v-if="deleteError" class="field-error" role="alert">{{ deleteError }}</p>
+        <p>{{ EVENT_DELETE_MESSAGES.PROMPT }}</p>
+      </div>
+    </template>
+
+    <template #footer>
+      <button type="button" data-variant="danger" :disabled="isPending" @click="onConfirm">
+        {{ EVENT_DELETE_MESSAGES.CONFIRM }}
+      </button>
+      <button type="button" :disabled="isPending" @click="emit('close')">
+        {{ EVENT_DELETE_MESSAGES.CANCEL }}
+      </button>
+    </template>
+  </BaseModal>
+</template>

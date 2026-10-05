@@ -1,3 +1,36 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+
+import { PAGINATION } from '../config/constants'
+import { PAGER_MESSAGES } from '../config/messages'
+import { buildPageWindow } from '../model/pagination'
+
+const props = defineProps<{
+  page: number
+  pageSize: number
+  hasNext: boolean
+}>()
+
+const emit = defineEmits<{
+  prev: []
+  next: []
+  go: [page: number]
+  'page-size': [size: number]
+}>()
+
+defineOptions({ name: 'EventsPager' })
+
+const isFirstPage = computed(() => props.page === PAGINATION.DEFAULT_PAGE)
+
+const pageSlots = computed(() => buildPageWindow(props.page, props.hasNext))
+
+function onPageSizeChange(event: Event): void {
+  if (event.target instanceof HTMLSelectElement) {
+    emit('page-size', Number(event.target.value))
+  }
+}
+</script>
+
 <template>
   <nav class="flex flex-wrap items-center justify-end gap-2" :aria-label="PAGER_MESSAGES.NAV_LABEL">
     <button
@@ -41,36 +74,3 @@
     </label>
   </nav>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue'
-
-import { PAGINATION } from '../config/constants'
-import { PAGER_MESSAGES } from '../config/messages'
-import { buildPageWindow } from '../model/pagination'
-
-const props = defineProps<{
-  page: number
-  pageSize: number
-  hasNext: boolean
-}>()
-
-const emit = defineEmits<{
-  prev: []
-  next: []
-  go: [page: number]
-  'page-size': [size: number]
-}>()
-
-defineOptions({ name: 'EventsPager' })
-
-const isFirstPage = computed(() => props.page === PAGINATION.DEFAULT_PAGE)
-
-const pageSlots = computed(() => buildPageWindow(props.page, props.hasNext))
-
-function onPageSizeChange(event: Event): void {
-  if (event.target instanceof HTMLSelectElement) {
-    emit('page-size', Number(event.target.value))
-  }
-}
-</script>

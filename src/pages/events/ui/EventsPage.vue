@@ -1,3 +1,20 @@
+<script setup lang="ts">
+import { EventDeleteModal } from '@/features/event-delete'
+import { EventFormModal } from '@/features/event-form'
+import { StateMessage } from '@/shared/ui'
+
+import { LIST_MESSAGES } from '../config/messages'
+import { useEventsList } from '../model/useEventsList'
+import { useEventModals } from '../model/useEventModals'
+import { useListStore } from '../model/listStore'
+import EventsList from './EventsList.vue'
+import Pager from './Pager.vue'
+
+const store = useListStore()
+const { items, isLoading, error, retry, page, pageSize, hasNext, isVirtualized } = useEventsList()
+const { create, edit, remove } = useEventModals()
+</script>
+
 <template>
   <div class="flex flex-col gap-6">
     <div class="flex items-center justify-end">
@@ -41,20 +58,3 @@
     />
   </div>
 </template>
-
-<script setup lang="ts">
-import { EventDeleteModal } from '@/features/event-delete'
-import { EventFormModal } from '@/features/event-form'
-import { StateMessage } from '@/shared/ui'
-
-import { LIST_MESSAGES } from '../config/messages'
-import { useEventsList } from '../model/useEventsList'
-import { useEventModals } from '../model/useEventModals'
-import { useListStore } from '../model/listStore'
-import EventsList from './EventsList.vue'
-import Pager from './Pager.vue'
-
-const store = useListStore()
-const { items, isLoading, error, retry, page, pageSize, hasNext, isVirtualized } = useEventsList()
-const { create, edit, remove } = useEventModals()
-</script>

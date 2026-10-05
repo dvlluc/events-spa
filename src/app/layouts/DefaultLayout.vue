@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import { APP_MESSAGES } from '@/shared/config'
+</script>
+
 <template>
   <div class="flex min-h-dvh flex-col">
     <header>
@@ -10,7 +14,3 @@
     </main>
   </div>
 </template>
-
-<script setup lang="ts">
-import { APP_MESSAGES } from '@/shared/config'
-</script>

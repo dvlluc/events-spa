@@ -1,11 +1,3 @@
-<template>
-  <div>
-    <label :for="inputId">{{ label }}</label>
-    <slot v-bind="control" />
-    <p v-if="error" :id="errorId" class="field-error">{{ error }}</p>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed, useId, type VNode } from 'vue'
 
@@ -36,3 +28,11 @@ const control = computed<FormControl>(() => {
   return attributes
 })
 </script>
+
+<template>
+  <div>
+    <label :for="inputId">{{ label }}</label>
+    <slot v-bind="control" />
+    <p v-if="error" :id="errorId" class="field-error">{{ error }}</p>
+  </div>
+</template>

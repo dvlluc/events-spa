@@ -1,3 +1,24 @@
+<script setup lang="ts">
+import type { StyleValue } from 'vue'
+
+import { formatDateTime, formatDuration, type EventItem } from '@/entities/event'
+
+import { VIRTUALIZATION } from '../config/constants'
+import { LIST_MESSAGES } from '../config/messages'
+
+defineProps<{
+  event: EventItem
+  positionStyle?: StyleValue | undefined
+}>()
+
+const emit = defineEmits<{ edit: [event: EventItem]; delete: [event: EventItem] }>()
+
+const rowStyle: StyleValue = {
+  height: `${VIRTUALIZATION.ROW_HEIGHT_PX}px`,
+  marginBottom: `${VIRTUALIZATION.ROW_GAP_PX}px`,
+}
+</script>
+
 <template>
   <div class="event-row flex items-center gap-4" role="listitem" :style="[rowStyle, positionStyle]">
     <div class="min-w-0 grow">
@@ -20,24 +41,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import type { StyleValue } from 'vue'
-
-import { formatDateTime, formatDuration, type EventItem } from '@/entities/event'
-
-import { VIRTUALIZATION } from '../config/constants'
-import { LIST_MESSAGES } from '../config/messages'
-
-defineProps<{
-  event: EventItem
-  positionStyle?: StyleValue | undefined
-}>()
-
-const emit = defineEmits<{ edit: [event: EventItem]; delete: [event: EventItem] }>()
-
-const rowStyle: StyleValue = {
-  height: `${VIRTUALIZATION.ROW_HEIGHT_PX}px`,
-  marginBottom: `${VIRTUALIZATION.ROW_GAP_PX}px`,
-}
-</script>

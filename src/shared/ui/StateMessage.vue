@@ -1,12 +1,3 @@
-<template>
-  <div class="flex items-center gap-2">
-    <p :role="role">{{ text }}</p>
-    <button v-if="kind === 'error'" type="button" @click="emit('retry')">
-      {{ UI_MESSAGES.RETRY }}
-    </button>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue'
 
@@ -30,3 +21,12 @@ const KIND_MESSAGES: Record<StateKind, string> = {
 const text = computed(() => props.message ?? KIND_MESSAGES[props.kind])
 const role = computed(() => (props.kind === 'error' ? 'alert' : 'status'))
 </script>
+
+<template>
+  <div class="flex items-center gap-2">
+    <p :role="role">{{ text }}</p>
+    <button v-if="kind === 'error'" type="button" @click="emit('retry')">
+      {{ UI_MESSAGES.RETRY }}
+    </button>
+  </div>
+</template>

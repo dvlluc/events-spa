@@ -1,22 +1,3 @@
-<template>
-  <dialog
-    ref="dialog"
-    :data-size="size"
-    :aria-labelledby="titleId"
-    @keydown="onKeydown"
-    @cancel="onCancel"
-  >
-    <div class="flex items-start justify-between gap-4">
-      <h2 class="text-xl font-semibold" :id="titleId">{{ title }}</h2>
-      <button type="button" :aria-label="UI_MESSAGES.CLOSE" @click="requestClose">×</button>
-    </div>
-    <div class="mt-4"><slot name="body" /></div>
-    <div v-if="$slots.footer" class="mt-6 flex justify-end gap-2">
-      <slot name="footer" />
-    </div>
-  </dialog>
-</template>
-
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, useId, type VNode } from 'vue'
 
@@ -70,3 +51,22 @@ function onCancel(event: Event): void {
   emit('close')
 }
 </script>
+
+<template>
+  <dialog
+    ref="dialog"
+    :data-size="size"
+    :aria-labelledby="titleId"
+    @keydown="onKeydown"
+    @cancel="onCancel"
+  >
+    <div class="flex items-start justify-between gap-4">
+      <h2 class="text-xl font-semibold" :id="titleId">{{ title }}</h2>
+      <button type="button" :aria-label="UI_MESSAGES.CLOSE" @click="requestClose">×</button>
+    </div>
+    <div class="mt-4"><slot name="body" /></div>
+    <div v-if="$slots.footer" class="mt-6 flex justify-end gap-2">
+      <slot name="footer" />
+    </div>
+  </dialog>
+</template>

@@ -1,17 +1,3 @@
-<template>
-  <div ref="scrollElement" class="event-list" role="list" :style="viewportStyle">
-    <div aria-hidden="true" :style="spacerStyle" />
-    <EventRow
-      v-for="row in rows"
-      :key="row.key"
-      :event="row.event"
-      :position-style="row.positionStyle"
-      @edit="emit('edit', $event)"
-      @delete="emit('delete', $event)"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useVirtualizer } from '@tanstack/vue-virtual'
 import { computed, ref, type StyleValue } from 'vue'
@@ -68,3 +54,17 @@ const rows = computed<RowView[]>(() => {
   return view
 })
 </script>
+
+<template>
+  <div ref="scrollElement" class="event-list" role="list" :style="viewportStyle">
+    <div aria-hidden="true" :style="spacerStyle" />
+    <EventRow
+      v-for="row in rows"
+      :key="row.key"
+      :event="row.event"
+      :position-style="row.positionStyle"
+      @edit="emit('edit', $event)"
+      @delete="emit('delete', $event)"
+    />
+  </div>
+</template>

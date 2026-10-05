@@ -1,3 +1,55 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+
+import { formatDuration, type EventItem } from '@/entities/event'
+import { BaseModal, FormField } from '@/shared/ui'
+
+import {
+  EVENT_FORM_ACTIONS,
+  EVENT_FORM_FEEDBACK,
+  EVENT_FORM_LABELS,
+  EVENT_FORM_TITLES,
+} from '../config/messages'
+import { useEventForm, type EventFormMode } from '../model/useEventForm'
+
+const props = defineProps<{
+  mode: EventFormMode
+  event?: EventItem | null | undefined
+}>()
+
+const emit = defineEmits<{ close: [] }>()
+
+const {
+  values,
+  errors,
+  isSubmitting,
+  validateField,
+  submitError,
+  detailError,
+  durationMinutes,
+  submit,
+} = useEventForm(props.mode, props.event)
+
+const title = computed(() =>
+  props.mode === 'create' ? EVENT_FORM_TITLES.CREATE : EVENT_FORM_TITLES.EDIT,
+)
+
+const isDurationHint = computed(() => durationMinutes.value === null)
+
+const durationText = computed(() => {
+  const minutes = durationMinutes.value
+  return minutes === null ? EVENT_FORM_FEEDBACK.DURATION_HINT : formatDuration(minutes)
+})
+
+function fieldError(name: keyof typeof values): string | undefined {
+  return errors.value.fieldErrors[name]?.[0]
+}
+
+async function onSubmit(): Promise<void> {
+  if (await submit()) emit('close')
+}
+</script>
+
 <template>
   <BaseModal :title="title" :busy="isSubmitting" size="wide" @close="emit('close')">
     <template #body>
@@ -71,55 +123,3 @@
     </template>
   </BaseModal>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue'
-
-import { formatDuration, type EventItem } from '@/entities/event'
-import { BaseModal, FormField } from '@/shared/ui'
-
-import {
-  EVENT_FORM_ACTIONS,
-  EVENT_FORM_FEEDBACK,
-  EVENT_FORM_LABELS,
-  EVENT_FORM_TITLES,
-} from '../config/messages'
-import { useEventForm, type EventFormMode } from '../model/useEventForm'
-
-const props = defineProps<{
-  mode: EventFormMode
-  event?: EventItem | null | undefined
-}>()
-
-const emit = defineEmits<{ close: [] }>()
-
-const {
-  values,
-  errors,
-  isSubmitting,
-  validateField,
-  submitError,
-  detailError,
-  durationMinutes,
-  submit,
-} = useEventForm(props.mode, props.event)
-
-const title = computed(() =>
-  props.mode === 'create' ? EVENT_FORM_TITLES.CREATE : EVENT_FORM_TITLES.EDIT,
-)
-
-const isDurationHint = computed(() => durationMinutes.value === null)
-
-const durationText = computed(() => {
-  const minutes = durationMinutes.value
-  return minutes === null ? EVENT_FORM_FEEDBACK.DURATION_HINT : formatDuration(minutes)
-})
-
-function fieldError(name: keyof typeof values): string | undefined {
-  return errors.value.fieldErrors[name]?.[0]
-}
-
-async function onSubmit(): Promise<void> {
-  if (await submit()) emit('close')
-}
-</script>

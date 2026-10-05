@@ -81,7 +81,7 @@ export default defineConfigWithVueTs(
     name: 'app/project-rules',
     files: ['**/*.{vue,ts,mts,tsx}'],
     rules: {
-      'vue/block-order': ['error', { order: ['template', 'script', 'style'] }],
+      'vue/block-order': ['error', { order: ['script', 'template', 'style'] }],
       'vue/define-macros-order': 'error',
       'vue/no-v-html': 'error',
       'vue/component-api-style': ['error', ['script-setup']],
