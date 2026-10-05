@@ -5,8 +5,9 @@ export const LIST_MESSAGES = {
 } as const
 
 export const PAGER_MESSAGES = {
-  PREV: 'Назад',
-  NEXT: 'Вперёд',
+  NAV_LABEL: 'Пагинация',
+  PREV: 'Предыдущая страница',
+  NEXT: 'Следующая страница',
   PAGE: (page: number) => `Страница ${page}`,
   PAGE_SIZE_LABEL: 'Элементов на странице',
 } as const

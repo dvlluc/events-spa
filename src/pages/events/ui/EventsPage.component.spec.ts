@@ -1,10 +1,168 @@
-import { expect, test } from 'vitest'
+import { http, HttpResponse } from 'msw/http'
+import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import { render } from 'vitest-browser-vue'
 
+import { worker } from '@mocks/browser'
+import { MOCK_HTTP } from '@mocks/constants'
+import { db } from '@mocks/db'
+import { createTestContext } from '@mocks/test-utils'
+
+import { formatDateTime, formatDuration, type EventItem } from '@/entities/event'
+import { STATE_MESSAGES, UI_MESSAGES } from '@/shared/config'
+
+import { PAGINATION, SORT, VIRTUALIZATION } from '../config/constants'
+import { PAGER_MESSAGES } from '../config/messages'
+import { useListStore } from '../model/listStore'
 import EventsPage from './EventsPage.vue'
 
-test('страница событий рендерится в браузере', async () => {
-  const screen = await render(EventsPage)
+const WAIT = { timeout: 5_000 }
+const SLOW_WAIT = { timeout: 10_000 }
+const SLOW_TEST = { timeout: 15_000 }
+const MAX_PAGE_SIZE = 100
 
-  await expect.element(screen.container.firstElementChild as HTMLElement).toBeInTheDocument()
+type ListStore = ReturnType<typeof useListStore>
+
+async function renderPage(prepare?: (store: ListStore) => void) {
+  const { plugins, pinia } = createTestContext()
+  prepare?.(useListStore(pinia))
+  return render(EventsPage, { global: { plugins } })
+}
+
+type Screen = Awaited<ReturnType<typeof renderPage>>
+
+function rowCount(screen: Screen): number {
+  return screen.getByRole('listitem').length
+}
+
+function firstEvent(): EventItem {
+  const [event] = db.list({
+    page: 1,
+    limit: 1,
+    sortBy: SORT.DEFAULT_FIELD,
+    order: SORT.DEFAULT_ORDER,
+  })
+  if (!event) throw new Error('в базе нет событий')
+  return event
+}
+
+function visibleRows(screen: Screen): number {
+  const viewport = screen.getByRole('list').query()
+  expect(viewport).not.toBeNull()
+  const stride = VIRTUALIZATION.ROW_HEIGHT_PX + VIRTUALIZATION.ROW_GAP_PX
+  return Math.ceil((viewport?.clientHeight ?? 0) / stride)
+}
+
+async function waitForRows(screen: Screen): Promise<void> {
+  await vi.waitFor(
+    () => {
+      expect(rowCount(screen)).toBeGreaterThan(0)
+    },
+    { timeout: SLOW_WAIT.timeout },
+  )
+}
+
+beforeEach(() => {
+  db.reset()
+})
+
+afterEach(() => {
+  worker.resetHandlers()
+})
+
+test('пагинация: цифры страниц, стрелки и смена размера страницы', async () => {
+  db.reset(30)
+  const screen = await renderPage()
+  const first = firstEvent()
+
+  await expect
+    .element(screen.getByRole('listitem'), WAIT)
+    .toHaveLength(PAGINATION.DEFAULT_PAGE_SIZE)
+
+  const firstRow = screen.getByRole('listitem').first()
+  await expect.element(firstRow.getByText(first.title), WAIT).toBeInTheDocument()
+  await expect.element(firstRow.getByText(formatDateTime(first.startAt)), WAIT).toBeInTheDocument()
+  await expect
+    .element(firstRow.getByText(formatDuration(first.durationMinutes)), WAIT)
+    .toBeInTheDocument()
+
+  const pageOne = screen.getByRole('button', { name: PAGER_MESSAGES.PAGE(1) })
+  const pageTwo = screen.getByRole('button', { name: PAGER_MESSAGES.PAGE(2) })
+  const prevButton = screen.getByRole('button', { name: PAGER_MESSAGES.PREV })
+  const nextButton = screen.getByRole('button', { name: PAGER_MESSAGES.NEXT })
+
+  await expect.element(pageOne, WAIT).toHaveAttribute('aria-current', 'page')
+  await expect.element(prevButton, WAIT).toBeDisabled()
+  await expect.element(nextButton, WAIT).toBeEnabled()
+  await expect.element(pageTwo, WAIT).toBeEnabled()
+
+  await pageTwo.click()
+  await expect.element(pageTwo, WAIT).toHaveAttribute('aria-current', 'page')
+  await expect.element(pageOne, WAIT).not.toHaveAttribute('aria-current', 'page')
+  await expect.element(prevButton, WAIT).toBeEnabled()
+
+  await prevButton.click()
+  await expect.element(pageOne, WAIT).toHaveAttribute('aria-current', 'page')
+  await expect.element(prevButton, WAIT).toBeDisabled()
+
+  await nextButton.click()
+  await expect.element(pageTwo, WAIT).toHaveAttribute('aria-current', 'page')
+
+  await screen.getByRole('combobox').selectOptions(String(PAGINATION.PAGE_SIZE_OPTIONS[0]))
+  await expect.element(pageOne, WAIT).toHaveAttribute('aria-current', 'page')
+  await expect
+    .element(screen.getByRole('listitem'), WAIT)
+    .toHaveLength(PAGINATION.PAGE_SIZE_OPTIONS[0])
+})
+
+test('50 строк — ровно порог, все строки в DOM', async () => {
+  db.reset(VIRTUALIZATION.THRESHOLD)
+  const screen = await renderPage((store) => store.setPageSize(VIRTUALIZATION.THRESHOLD))
+
+  await expect.element(screen.getByRole('listitem'), WAIT).toHaveLength(VIRTUALIZATION.THRESHOLD)
+})
+
+test('51 строка — виртуализация: в DOM меньше всех, но не меньше видимых', SLOW_TEST, async () => {
+  db.reset(VIRTUALIZATION.THRESHOLD + 1)
+  const screen = await renderPage((store) => store.setPageSize(MAX_PAGE_SIZE))
+
+  await waitForRows(screen)
+
+  const rendered = rowCount(screen)
+  expect(rendered).toBeLessThan(VIRTUALIZATION.THRESHOLD + 1)
+  expect(rendered).toBeGreaterThanOrEqual(visibleRows(screen))
+})
+
+test('100 строк — виртуализация: в DOM меньше всех, но не меньше видимых', SLOW_TEST, async () => {
+  db.reset(MAX_PAGE_SIZE)
+  const screen = await renderPage((store) => store.setPageSize(MAX_PAGE_SIZE))
+
+  await waitForRows(screen)
+
+  const rendered = rowCount(screen)
+  expect(rendered).toBeLessThan(MAX_PAGE_SIZE)
+  expect(rendered).toBeGreaterThanOrEqual(visibleRows(screen))
+})
+
+test('пустая база — empty-состояние вместо списка', async () => {
+  db.reset(0)
+  const screen = await renderPage()
+
+  await expect.element(screen.getByRole('status'), WAIT).toHaveTextContent(STATE_MESSAGES.EMPTY)
+  expect(screen.getByRole('list').query()).toBeNull()
+})
+
+test('ошибка загрузки — alert и «Повторить» возвращает список', SLOW_TEST, async () => {
+  worker.use(
+    http.get(MOCK_HTTP.EVENTS_PATH, () => HttpResponse.json({ message: 'error' }, { status: 500 })),
+  )
+  const screen = await renderPage()
+
+  await expect.element(screen.getByRole('alert'), SLOW_WAIT).toHaveTextContent(STATE_MESSAGES.ERROR)
+
+  worker.resetHandlers()
+  await screen.getByRole('button', { name: UI_MESSAGES.RETRY }).click()
+
+  await expect
+    .element(screen.getByRole('listitem'), WAIT)
+    .toHaveLength(PAGINATION.DEFAULT_PAGE_SIZE)
 })
