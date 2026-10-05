@@ -15,3 +15,14 @@ export const HTTP_MESSAGES = {
   TIMEOUT: 'Сервер не ответил за отведённое время.',
   CONTRACT: 'Сервер вернул данные неожиданного формата.',
 } as const
+
+export const STATE_MESSAGES = {
+  LOADING: 'Загрузка…',
+  EMPTY: 'Ничего не найдено.',
+  ERROR: 'Не удалось загрузить данные.',
+} as const
+
+export const UI_MESSAGES = {
+  CLOSE: 'Закрыть',
+  RETRY: 'Повторить',
+} as const
