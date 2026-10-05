@@ -1,7 +1,17 @@
 {
   "extends": "@tsconfig/node24/tsconfig.json",
-  "include": ["./**/*"],
+  "include": ["./**/*", "../mocks/globals.d.ts"],
   "compilerOptions": {
+    "lib": [
+      "es2024",
+      "ESNext.Array",
+      "ESNext.Collection",
+      "ESNext.Error",
+      "ESNext.Iterator",
+      "ESNext.Promise",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "preserve",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

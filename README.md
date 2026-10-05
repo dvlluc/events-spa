@@ -64,7 +64,7 @@ pnpm exec playwright install chromium
 ```
 
 ```sh
-pnpm test            # unit + component
+pnpm test            # unit + component + e2e
 pnpm test:unit       # только unit (happy-dom)
 pnpm test:component  # только component (Browser Mode, Chromium)
 pnpm test:coverage   # с отчётом покрытия (./coverage)

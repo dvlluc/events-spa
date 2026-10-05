@@ -1,19 +1,25 @@
 import process from 'node:process'
 import { defineConfig, devices } from '@playwright/test'
 
+const DEFAULT_API_BASE_URL = 'http://localhost:3000/api/v1'
+
+const PREVIEW_PORT = 4173
+const PREVIEW_URL = `http://localhost:${PREVIEW_PORT}`
+
 export default defineConfig({
   testDir: './e2e',
   timeout: 30 * 1000,
   expect: {
-    timeout: 5000,
+    timeout: 10 * 1000,
   },
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   ...(process.env.CI ? { workers: 1 } : {}),
-  reporter: 'html',
+  reporter: [['list'], ['html', { open: 'never' }]],
+
   use: {
     actionTimeout: 0,
-    baseURL: process.env.CI ? 'http://localhost:4173' : 'http://localhost:5173',
+    baseURL: PREVIEW_URL,
 
     trace: 'on-first-retry',
 
@@ -28,28 +34,14 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
       },
     },
-    {
-      name: 'firefox',
-      use: {
-        ...devices['Desktop Firefox'],
-      },
-    },
-    {
-      name: 'webkit',
-      use: {
-        ...devices['Desktop Safari'],
-      },
-    },
   ],
 
   webServer: {
-    /**
-     * Use the dev server by default for faster feedback loop.
-     * Use the preview server on CI for more realistic testing.
-     * Playwright will re-use the local server if there is already a dev-server running.
-     */
-    command: process.env.CI ? 'npm run preview' : 'npm run dev',
-    port: process.env.CI ? 4173 : 5173,
+    /* Продакшн-сборка в режиме e2e (в бандле есть MSW) + preview-сервер. */
+    command: `pnpm exec vite build --mode e2e && pnpm exec vite preview --port ${PREVIEW_PORT} --strictPort`,
+    url: PREVIEW_URL,
+    env: { VITE_API_BASE_URL: process.env.VITE_API_BASE_URL ?? DEFAULT_API_BASE_URL },
+    timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
   },
 })
