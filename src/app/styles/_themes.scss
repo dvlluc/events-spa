@@ -28,8 +28,6 @@ $motion-fast: 150ms;
 $motion-blink: 1s;
 
 // Breakpoint для media-записей в scoped-стилях компонентов: там SCSS-переменные
-// недоступны, используется литерал 40rem — менять вместе с этим значением.
-$bp: 40rem;
 $event-row-dates-column: 9rem;
 $event-row-duration-column: 8rem;
 $event-row-columns: minmax(0, 1fr) $event-row-dates-column $event-row-duration-column max-content;

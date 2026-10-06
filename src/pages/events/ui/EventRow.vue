@@ -28,17 +28,30 @@ const rowStyle = computed<StyleValue>(() => {
 </script>
 
 <template>
-  <div class="event-row" role="listitem" :style="rowStyle" :ref="measure">
-    <div class="event-row-main">
-      <p class="event-row-title">{{ event.title }}</p>
-      <p class="event-row-description line-clamp-2">{{ event.description }}</p>
+  <div
+    class="event-row grid grid-cols-[var(--event-row-columns)] items-center gap-4 p-3 text-left max-[40rem]:flex max-[40rem]:flex-wrap max-[40rem]:items-start max-[40rem]:gap-x-4 max-[40rem]:gap-y-1 max-[40rem]:px-2 max-[40rem]:py-1"
+    role="listitem"
+    :style="rowStyle"
+    :ref="measure"
+  >
+    <div
+      class="event-row-main min-w-0 max-[40rem]:shrink-0 max-[40rem]:grow max-[40rem]:basis-full"
+    >
+      <p class="event-row-title m-0 font-semibold max-[40rem]:truncate">{{ event.title }}</p>
+      <p class="event-row-description m-0 line-clamp-2">{{ event.description }}</p>
     </div>
-    <p class="event-row-dates">
+    <p
+      class="event-row-dates m-0 flex flex-col items-start px-2 py-1 text-[0.8125rem] leading-[1.35] whitespace-nowrap tabular-nums max-[40rem]:px-1 max-[40rem]:py-0"
+    >
       <time :datetime="event.startAt">{{ formatDateTime(event.startAt) }}</time>
       <time :datetime="event.endAt">{{ formatDateTime(event.endAt) }}</time>
     </p>
-    <p class="event-row-duration">{{ formatDuration(event.durationMinutes) }}</p>
-    <div class="event-row-actions">
+    <p
+      class="event-row-duration m-0 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap tabular-nums max-[40rem]:text-[0.8125rem]"
+    >
+      {{ formatDuration(event.durationMinutes) }}
+    </p>
+    <div class="event-row-actions flex gap-2">
       <BaseButton @click="emit('edit', event)">{{ LIST_MESSAGES.EDIT }}</BaseButton>
       <BaseButton variant="danger" @click="emit('delete', event)">
         {{ LIST_MESSAGES.DELETE }}
@@ -50,92 +63,30 @@ const rowStyle = computed<StyleValue>(() => {
 <style scoped>
 @layer components {
   .event-row {
-    display: grid;
-    grid-template-columns: var(--event-row-columns);
-    align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-3);
     border-bottom: 1px solid var(--border);
-    text-align: left;
     content-visibility: auto;
-  }
-
-  .event-row-main {
-    min-width: 0;
-  }
-
-  .event-row-actions {
-    display: flex;
-    gap: var(--space-2);
   }
 
   .event-row:last-child {
     border-bottom: none;
   }
 
-  .event-row-title {
-    margin: 0;
-    font-weight: 600;
-  }
-
   .event-row-description {
-    margin: 0;
     color: var(--muted);
   }
 
   .event-row-dates {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 0;
-    padding: var(--space-1) var(--space-2);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background-color: var(--fill-subtle);
     color: var(--text);
-    font-size: 0.8125rem;
-    line-height: 1.35;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
   }
 
   .event-row-duration {
-    min-width: 0;
-    margin: 0;
-    overflow: hidden;
     color: var(--muted);
-    font-variant-numeric: tabular-nums;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   @media (width <= 40rem) {
-    .event-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      gap: var(--space-1) var(--space-4);
-      padding: var(--space-1) var(--space-2);
-    }
-
-    .event-row-main {
-      flex: 1 0 100%;
-    }
-
-    .event-row-title {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .event-row-dates {
-      padding: 0 var(--space-1);
-    }
-
-    .event-row-duration {
-      font-size: 0.8125rem;
-    }
-
     .event-row-actions button {
       padding: var(--space-1) var(--space-2);
       font-size: 0.8125rem;

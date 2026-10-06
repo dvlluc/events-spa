@@ -4,9 +4,9 @@ import { APP_MESSAGES } from '@/shared/config'
 
 <template>
   <div class="flex min-h-dvh flex-col">
-    <header>
+    <header class="py-3">
       <div class="mx-auto w-full max-w-7xl px-4">
-        <h1>{{ APP_MESSAGES.TITLE }}</h1>
+        <h1 class="m-0 text-xl font-semibold">{{ APP_MESSAGES.TITLE }}</h1>
       </div>
     </header>
     <main class="mx-auto w-full max-w-7xl grow px-4 py-6">
@@ -18,15 +18,8 @@ import { APP_MESSAGES } from '@/shared/config'
 <style scoped>
 @layer components {
   header {
-    padding-block: var(--space-3);
     border-bottom: 1px solid var(--border);
     background-color: var(--surface);
-  }
-
-  h1 {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
   }
 }
 </style>

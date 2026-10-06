@@ -3,24 +3,15 @@ import { LOADER } from '@/shared/config'
 </script>
 
 <template>
-  <span class="loader" aria-hidden="true">
-    <span v-for="dot in LOADER.DOTS" :key="dot"></span>
+  <span class="loader inline-flex gap-1" aria-hidden="true">
+    <span v-for="dot in LOADER.DOTS" :key="dot" class="size-2 rounded-full bg-current"></span>
   </span>
 </template>
 
 <style scoped>
 @layer components {
   .loader {
-    display: inline-flex;
-    gap: var(--space-1);
     color: var(--muted);
-  }
-
-  .loader span {
-    width: var(--space-2);
-    height: var(--space-2);
-    border-radius: 50%;
-    background-color: currentcolor;
   }
 }
 

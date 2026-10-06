@@ -3,7 +3,7 @@ defineOptions({ inheritAttrs: false })
 </script>
 
 <template>
-  <span class="select-wrap">
+  <span class="select-wrap inline-block">
     <select v-bind="$attrs">
       <slot />
     </select>
@@ -14,7 +14,6 @@ defineOptions({ inheritAttrs: false })
 @layer components {
   .select-wrap {
     position: relative;
-    display: inline-block;
   }
 
   .select-wrap::after {

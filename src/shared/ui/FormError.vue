@@ -5,15 +5,13 @@ defineProps<{
 </script>
 
 <template>
-  <p v-if="message" class="field-error" role="alert">{{ message }}</p>
+  <p v-if="message" class="field-error mt-1 text-[0.8125rem]" role="alert">{{ message }}</p>
 </template>
 
 <style scoped>
 @layer components {
   .field-error {
-    margin-top: var(--space-1);
     color: var(--danger);
-    font-size: 0.8125rem;
   }
 }
 </style>

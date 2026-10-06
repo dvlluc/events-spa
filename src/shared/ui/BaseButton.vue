@@ -14,7 +14,7 @@ withDefaults(
 
 <template>
   <button
-    class="base-button"
+    class="base-button relative font-medium"
     :type="type"
     :data-variant="variant === 'default' ? undefined : variant"
     :disabled="disabled || loading"
@@ -27,14 +27,12 @@ withDefaults(
 <style scoped>
 @layer components {
   .base-button {
-    position: relative;
     padding: var(--space-2) var(--space-4);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background-color: var(--surface);
     color: var(--text);
     font: inherit;
-    font-weight: 500;
     cursor: pointer;
   }
 

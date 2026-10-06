@@ -34,12 +34,15 @@ function onPageSizeChange(event: Event): void {
 </script>
 
 <template>
-  <nav class="pager" :aria-label="PAGER_MESSAGES.NAV_LABEL">
+  <nav
+    class="pager flex flex-wrap items-center justify-end gap-2 max-[40rem]:w-full max-[40rem]:justify-center max-[40rem]:gap-1"
+    :aria-label="PAGER_MESSAGES.NAV_LABEL"
+  >
     <BaseButton :disabled="isFirstPage" :aria-label="PAGER_MESSAGES.PREV" @click="emit('prev')">
       ←
     </BaseButton>
     <template v-for="slot in pageSlots" :key="String(slot)">
-      <span v-if="slot === 'gap'" class="pager-gap" aria-hidden="true">…</span>
+      <span v-if="slot === 'gap'" class="pager-gap px-1" aria-hidden="true">…</span>
       <BaseButton
         v-else
         :aria-label="PAGER_MESSAGES.PAGE(slot)"
@@ -53,8 +56,8 @@ function onPageSizeChange(event: Event): void {
       →
     </BaseButton>
     <span class="sr-only" aria-live="polite">{{ PAGER_MESSAGES.PAGE(page) }}</span>
-    <label class="pager-size">
-      <span class="pager-label">{{ PAGER_MESSAGES.PAGE_SIZE_LABEL }}</span>
+    <label class="pager-size flex items-center gap-2 font-medium max-[40rem]:gap-1">
+      <span class="pager-label max-[40rem]:sr-only">{{ PAGER_MESSAGES.PAGE_SIZE_LABEL }}</span>
       <BaseSelect class="w-auto" :value="pageSize" @change="onPageSizeChange">
         <option v-for="size in PAGINATION.PAGE_SIZE_OPTIONS" :key="size" :value="size">
           {{ size }}
@@ -66,52 +69,14 @@ function onPageSizeChange(event: Event): void {
 
 <style scoped>
 @layer components {
-  .pager {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-end;
-    gap: var(--space-2);
-  }
-
-  .pager-size {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    margin-bottom: 0;
-    font-weight: 500;
-  }
-
   .pager-gap {
-    padding-inline: var(--space-1);
     color: var(--muted);
   }
 
   @media (width <= 40rem) {
-    .pager {
-      width: 100%;
-      justify-content: center;
-      gap: var(--space-1);
-    }
-
-    .pager-size {
-      gap: var(--space-1);
-    }
-
-    .pager-label {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
-      border: 0;
-    }
-
     .pager button {
       padding: var(--space-1) var(--space-2);
+      font-size: 0.8125rem;
     }
   }
 }
