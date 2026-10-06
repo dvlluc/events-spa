@@ -4,6 +4,7 @@ const DEFAULT_PAGE_SIZE = 10
 const PAGE_SIZE_SAMPLE = [5, 10, 20, 50]
 const VIRTUALIZED_PAGE_SIZE = 100
 const CURRENT_PAGE = 'page'
+const NARROW_VIEWPORT = { width: 375, height: 700 }
 
 test('загрузка списка: индикатор загрузки, затем строки и пагинация', async ({ page }) => {
   await expect(page.getByRole('status')).toHaveText('Загрузка…')
@@ -66,4 +67,34 @@ test('размер страницы 100: виртуализация, в DOM за
 
   await expect(rows.first()).toBeVisible()
   expect(await rows.count()).toBeLessThan(VIRTUALIZED_PAGE_SIZE)
+})
+
+test('узкий экран: заголовок и описание влезают, строки не перекрываются', async ({ page }) => {
+  await page.setViewportSize(NARROW_VIEWPORT)
+
+  const rows = page.getByRole('listitem')
+  await expect(rows).toHaveCount(DEFAULT_PAGE_SIZE)
+
+  const firstRow = rows.first()
+  const title = firstRow.getByRole('paragraph').first()
+  const description = firstRow.getByRole('paragraph').nth(1)
+  await expect(title).toBeVisible()
+  await expect(description).toBeVisible()
+
+  const hasHorizontalScroll = await page.evaluate(
+    () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  )
+  expect(hasHorizontalScroll).toBe(false)
+
+  const boxes = await rows.evaluateAll((elements) =>
+    elements.slice(0, 2).map((element) => {
+      const rect = element.getBoundingClientRect()
+      return { top: rect.top, bottom: rect.bottom }
+    }),
+  )
+  expect(boxes).toHaveLength(2)
+  const [firstBox, secondBox] = boxes
+  expect(firstBox?.bottom ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(
+    secondBox?.top ?? Number.NEGATIVE_INFINITY,
+  )
 })

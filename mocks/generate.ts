@@ -4,6 +4,13 @@ import type { EventItem } from '@/entities/event'
 
 import { MOCK_GENERATE } from './constants.ts'
 
+function limitText(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text
+  const cut = text.slice(0, maxLength)
+  const lastSpace = cut.lastIndexOf(' ')
+  return (lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trimEnd()
+}
+
 export function generateEvent(id: string): EventItem {
   const startAt = faker.date.between({ from: MOCK_GENERATE.DATE_FROM, to: MOCK_GENERATE.DATE_TO })
   const durationMinutes = faker.number.int({
@@ -16,8 +23,8 @@ export function generateEvent(id: string): EventItem {
 
   return {
     id,
-    title: faker.lorem.sentence(),
-    description: faker.lorem.paragraph(),
+    title: limitText(faker.lorem.sentence(), MOCK_GENERATE.TITLE_MAX_LENGTH),
+    description: limitText(faker.lorem.paragraph(), MOCK_GENERATE.DESCRIPTION_MAX_LENGTH),
     startAt: startAt.toISOString(),
     endAt: endAt.toISOString(),
     durationMinutes,

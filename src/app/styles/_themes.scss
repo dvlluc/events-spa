@@ -29,6 +29,9 @@ $radius: 0.5rem;
 $motion-fast: 150ms;
 $motion-blink: 1s;
 $bp: 40rem;
+$event-row-dates-column: 9rem;
+$event-row-duration-column: 8rem;
+$event-row-columns: minmax(0, 1fr) $event-row-dates-column $event-row-duration-column max-content;
 $fill-subtle: color-mix(in srgb, var(--border) 35%, transparent);
 $space: (
   1: 0.25rem,
