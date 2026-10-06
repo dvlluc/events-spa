@@ -5,25 +5,29 @@ import { formatDateTime, formatDuration, type EventItem } from '@/entities/event
 
 import { VIRTUALIZATION } from '../config/constants'
 import { LIST_MESSAGES } from '../config/messages'
+import type { RowMeasure } from './rowMeasure'
 
 const props = defineProps<{
   event: EventItem
   positionStyle?: StyleValue | undefined
+  measure?: RowMeasure | undefined
 }>()
 
 const emit = defineEmits<{ edit: [event: EventItem]; delete: [event: EventItem] }>()
 
 const rowStyle = computed<StyleValue>(() => {
   const base: StyleValue = {
-    height: `${VIRTUALIZATION.ROW_HEIGHT_PX}px`,
-    marginBottom: `${VIRTUALIZATION.ROW_GAP_PX}px`,
+    containIntrinsicSize: `auto ${VIRTUALIZATION.ROW_HEIGHT_PX}px`,
+    ...(props.positionStyle
+      ? { paddingBottom: `${VIRTUALIZATION.ROW_GAP_PX}px` }
+      : { marginBottom: `${VIRTUALIZATION.ROW_GAP_PX}px` }),
   }
   return props.positionStyle ? [base, props.positionStyle] : base
 })
 </script>
 
 <template>
-  <div class="event-row" role="listitem" :style="rowStyle">
+  <div class="event-row" role="listitem" :style="rowStyle" :ref="measure">
     <div class="event-row-main">
       <p class="event-row-title">{{ event.title }}</p>
       <p class="event-row-description">{{ event.description }}</p>

@@ -6,6 +6,7 @@ import type { EventItem } from '@/entities/event'
 
 import { VIRTUALIZATION } from '../config/constants'
 import EventRow from './EventRow.vue'
+import type { RowMeasure } from './rowMeasure'
 
 const props = defineProps<{ items: EventItem[] }>()
 
@@ -34,6 +35,14 @@ const spacerStyle = computed<StyleValue>(() => ({
 
 type RowView = { key: number; event: EventItem; positionStyle: StyleValue }
 
+const measureRow: RowMeasure = (element) => {
+  if (element instanceof HTMLElement) {
+    virtualizer.value.measureElement(element)
+  } else if (element === null) {
+    virtualizer.value.measureElement(null)
+  }
+}
+
 const rows = computed<RowView[]>(() => {
   const view: RowView[] = []
   for (const item of virtualizer.value.getVirtualItems()) {
@@ -61,8 +70,10 @@ const rows = computed<RowView[]>(() => {
     <EventRow
       v-for="row in rows"
       :key="row.key"
+      :data-index="row.key"
       :event="row.event"
       :position-style="row.positionStyle"
+      :measure="measureRow"
       @edit="emit('edit', $event)"
       @delete="emit('delete', $event)"
     />
