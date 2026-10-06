@@ -23,7 +23,7 @@ const { create, edit, remove } = useEventModals()
       </button>
     </div>
 
-    <StateMessage v-if="isLoading" kind="loading" />
+    <StateMessage v-if="isLoading" kind="loading" class="justify-center" />
     <StateMessage v-else-if="error" kind="error" @retry="retry" />
     <StateMessage v-else-if="items.length === 0" kind="empty" />
     <template v-else>

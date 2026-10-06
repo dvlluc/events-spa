@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 
 import { formatDuration, type EventItem } from '@/entities/event'
-import { BaseModal, FormField } from '@/shared/ui'
+import { BaseModal, FormField, LoadingDots } from '@/shared/ui'
 
 import {
   EVENT_FORM_ACTIONS,
@@ -115,7 +115,8 @@ async function onSubmit(): Promise<void> {
 
     <template #footer>
       <button type="button" :disabled="isSubmitting" @click="onSubmit">
-        {{ EVENT_FORM_ACTIONS.SAVE }}
+        <LoadingDots v-if="isSubmitting" />
+        <span>{{ EVENT_FORM_ACTIONS.SAVE }}</span>
       </button>
       <button type="button" :disabled="isSubmitting" @click="emit('close')">
         {{ EVENT_FORM_ACTIONS.CANCEL }}

@@ -2,7 +2,7 @@
 import { computed, shallowRef } from 'vue'
 
 import type { EventItem } from '@/entities/event'
-import { BaseModal } from '@/shared/ui'
+import { BaseModal, LoadingDots } from '@/shared/ui'
 
 import { EVENT_DELETE_MESSAGES } from '../config/messages'
 import { useDeleteEventMutation } from '../model/mutations'
@@ -41,7 +41,8 @@ async function onConfirm(): Promise<void> {
 
     <template #footer>
       <button type="button" data-variant="danger" :disabled="isPending" @click="onConfirm">
-        {{ EVENT_DELETE_MESSAGES.CONFIRM }}
+        <LoadingDots v-if="isPending" />
+        <span>{{ EVENT_DELETE_MESSAGES.CONFIRM }}</span>
       </button>
       <button type="button" :disabled="isPending" @click="emit('close')">
         {{ EVENT_DELETE_MESSAGES.CANCEL }}

@@ -11,6 +11,12 @@
   }
 }
 
+@keyframes loader-blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+
 @layer base {
   body {
     min-height: 100dvh;
@@ -114,6 +120,37 @@
     margin-top: space(1);
     color: var(--danger);
     font-size: 0.8125rem;
+  }
+
+  .loader {
+    display: inline-flex;
+    gap: space(1);
+
+    span {
+      width: space(2);
+      height: space(2);
+      border-radius: 50%;
+      background-color: var(--muted);
+    }
+  }
+
+  button:has(.loader) {
+    position: relative;
+  }
+
+  button:has(.loader) > span:not(.loader) {
+    opacity: 0;
+  }
+
+  button:has(.loader) > .loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  button .loader span {
+    background-color: currentcolor;
   }
 
   button {
@@ -347,6 +384,18 @@
     dialog::backdrop,
     .event-list {
       animation: fade-in $motion-fast ease-out;
+    }
+
+    .loader span {
+      animation: loader-blink $motion-blink ease-in-out infinite;
+
+      &:nth-child(2) {
+        animation-delay: $motion-fast;
+      }
+
+      &:nth-child(3) {
+        animation-delay: $motion-fast * 2;
+      }
     }
   }
 }

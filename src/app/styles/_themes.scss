@@ -27,6 +27,7 @@ $themes: (
 );
 $radius: 0.5rem;
 $motion-fast: 150ms;
+$motion-blink: 1s;
 $bp: 40rem;
 $fill-subtle: color-mix(in srgb, var(--border) 35%, transparent);
 $space: (

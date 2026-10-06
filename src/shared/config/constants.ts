@@ -14,3 +14,5 @@ export const QUERY = {
 
 // Связано с _themes.scss (темы задаются там) — необходимо менять вместе.
 export const THEME = { DEFAULT: 'light', ATTRIBUTE: 'data-theme' } as const
+
+export const LOADER = { DOTS: 3 } as const

@@ -3,6 +3,8 @@ import { computed } from 'vue'
 
 import { STATE_MESSAGES, UI_MESSAGES } from '@/shared/config'
 
+import LoadingDots from './LoadingDots.vue'
+
 type StateKind = 'loading' | 'empty' | 'error'
 
 const props = defineProps<{
@@ -24,7 +26,13 @@ const role = computed(() => (props.kind === 'error' ? 'alert' : 'status'))
 
 <template>
   <div class="flex items-center gap-2">
-    <p :role="role">{{ text }}</p>
+    <p :role="role">
+      <template v-if="kind === 'loading'">
+        <span class="sr-only">{{ text }}</span>
+        <LoadingDots />
+      </template>
+      <template v-else>{{ text }}</template>
+    </p>
     <button v-if="kind === 'error'" type="button" @click="emit('retry')">
       {{ UI_MESSAGES.RETRY }}
     </button>
