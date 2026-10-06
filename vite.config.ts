@@ -1,10 +1,12 @@
+import fs from 'node:fs'
+import path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath, URL } from 'node:url'
 
 import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 
 export const aliases = {
   '@mocks': fileURLToPath(new URL('./mocks', import.meta.url)),
@@ -12,11 +14,34 @@ export const aliases = {
 } as const
 
 const VITEST_ENV = 'VITEST'
+const E2E_MODE = 'e2e'
+const SERVICE_WORKER_FILE = 'mockServiceWorker.js'
 
 const devToolsPlugin = process.env[VITEST_ENV] ? [] : [vueDevTools()]
 
+/**
+ * Убирает mockServiceWorker.js из production-сборки.
+ */
+const dropServiceWorkerPlugin = (): Plugin => {
+  let mode = ''
+  let serviceWorkerPath = ''
+
+  return {
+    name: 'drop-mock-service-worker',
+    apply: 'build',
+    configResolved(config) {
+      mode = config.mode
+      serviceWorkerPath = path.resolve(config.root, config.build.outDir, SERVICE_WORKER_FILE)
+    },
+    closeBundle() {
+      if (mode === E2E_MODE) return
+      fs.rmSync(serviceWorkerPath, { force: true })
+    },
+  }
+}
+
 export default defineConfig({
-  plugins: [vue(), ...devToolsPlugin, tailwindcss()],
+  plugins: [vue(), ...devToolsPlugin, tailwindcss(), dropServiceWorkerPlugin()],
   resolve: {
     alias: aliases,
   },
