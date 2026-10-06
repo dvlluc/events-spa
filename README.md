@@ -87,4 +87,4 @@ CI: `.github/workflows/ci.yml` — install (кэш pnpm) → lint → lint:fsd �
 
 ## Развёртывание
 
-Статика — готовый `dist/`. Рекомендуемые заголовки хостинга: brotli/gzip-сжатие; для файлов `dist/assets/*` (имена с хэшем) — `Cache-Control: public, max-age=31536000, immutable`, для `index.html` — `no-cache` (в нём имена бандлов).
+Статика — готовый `dist/`. На Vercel настройки задаёт `vercel.json`: для файлов `dist/assets/*` (имена с хэшем) — `Cache-Control: public, max-age=31536000, immutable`, для корня — `no-cache`-эквивалент (`max-age=0, must-revalidate`, в нём имена бандлов), rewrite `/(.*)` → `/index.html` для SPA-fallback (остальным путям Vercel ставит `max-age=0, must-revalidate` по умолчанию). На других хостингах — те же заголовки вручную; сжатие brotli/gzip включает сам хостинг.
