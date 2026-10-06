@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v4-mini'
 
 import { EVENT_SCHEMA } from '../config/constants'
 
@@ -10,9 +10,9 @@ export const EventSchema = z.object({
   description: z.string(),
   startAt: DateTimeSchema,
   endAt: DateTimeSchema,
-  durationMinutes: z.int().min(EVENT_SCHEMA.MIN_DURATION_MINUTES),
+  durationMinutes: z.int().check(z.minimum(EVENT_SCHEMA.MIN_DURATION_MINUTES)),
 })
 
-export const EventPayloadSchema = EventSchema.omit({ id: true })
+export const EventPayloadSchema = z.omit(EventSchema, { id: true })
 
 export const EventListSchema = z.array(EventSchema)

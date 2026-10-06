@@ -1,12 +1,12 @@
 import { expect, test } from 'vitest'
 import { nextTick } from 'vue'
-import { z } from 'zod'
+import { z } from 'zod/v4-mini'
 
 import { useZodForm } from './useZodForm'
 
 const FormSchema = z.object({
-  title: z.string().min(3, 'Не короче 3 символов'),
-  note: z.string().min(1, 'Заполните заметку'),
+  title: z.string().check(z.minLength(3, 'Не короче 3 символов')),
+  note: z.string().check(z.minLength(1, 'Заполните заметку')),
 })
 
 function createForm() {

@@ -1,5 +1,5 @@
 import { reactive, shallowRef, watch } from 'vue'
-import { z, type ZodType } from 'zod'
+import { z, type ZodMiniType } from 'zod/v4-mini'
 
 export type FormErrors<Values> = {
   formErrors: string[]
@@ -13,7 +13,7 @@ function emptyErrors<Values>(): FormErrors<Values> {
 }
 
 export function useZodForm<Values extends object>(
-  schema: ZodType<Values, Values>,
+  schema: ZodMiniType<Values, Values>,
   initialValues: Values,
 ) {
   const defaults = { ...initialValues }

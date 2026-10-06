@@ -1,4 +1,4 @@
-import type { z } from 'zod'
+import type { z } from 'zod/v4-mini'
 
 import { ApiError, ContractError, request } from '@/shared/api'
 import { HTTP } from '@/shared/config'
@@ -10,7 +10,7 @@ import type { EventItem, EventListParams, EventPayload } from '../model/types'
 export type EventListRequest = EventListParams & { signal?: AbortSignal }
 export type EventGetRequest = { signal?: AbortSignal }
 
-function parse<S extends z.ZodType>(schema: S, data: unknown): z.infer<S> {
+function parse<S extends z.ZodMiniType>(schema: S, data: unknown): z.infer<S> {
   const result = schema.safeParse(data)
   if (!result.success) throw new ContractError()
   return result.data
