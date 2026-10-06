@@ -88,3 +88,5 @@ CI: `.github/workflows/ci.yml` — install (кэш pnpm) → lint → lint:fsd �
 ## Развёртывание
 
 Статика — готовый `dist/`. На Vercel настройки задаёт `vercel.json`: для файлов `dist/assets/*` (имена с хэшем) — `Cache-Control: public, max-age=31536000, immutable`, для корня — `no-cache`-эквивалент (`max-age=0, must-revalidate`, в нём имена бандлов), rewrite `/(.*)` → `/index.html` для SPA-fallback (остальным путям Vercel ставит `max-age=0, must-revalidate` по умолчанию). На других хостингах — те же заголовки вручную; сжатие brotli/gzip включает сам хостинг.
+
+Файлы сборки разложены по назначению (шаблоны имён и группы — `vite/output.ts` и `vite/code-splitting.ts`): `dist/assets/js/` — entry и асинхронные чанки приложения, `dist/assets/vendor/` — чанки `node_modules`, `dist/assets/css/` — стили, `dist/assets/static/` — прочие ассеты. Имена всегда с `[hash]`, поэтому годятся `immutable`-заголовки. Конфиг Vite разбит на блоки в `vite/` (`constants`, `aliases`, `plugins`, `output`, `code-splitting`), `vite.config.ts` их только собирает.
