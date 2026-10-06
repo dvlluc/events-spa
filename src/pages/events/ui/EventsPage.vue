@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { EventDeleteModal } from '@/features/event-delete'
-import { EventFormModal } from '@/features/event-form'
+import { defineAsyncComponent, onMounted } from 'vue'
+
 import { StateMessage } from '@/shared/ui'
 
+import { MODAL_WARMUP } from '../config/constants'
 import { LIST_MESSAGES } from '../config/messages'
 import { useEventsList } from '../model/useEventsList'
 import { useEventModals } from '../model/useEventModals'
@@ -10,9 +11,29 @@ import { useListStore } from '../model/listStore'
 import EventsList from './EventsList.vue'
 import Pager from './Pager.vue'
 
+const EventFormModal = defineAsyncComponent(() =>
+  import('@/features/event-form').then((module) => module.EventFormModal),
+)
+const EventDeleteModal = defineAsyncComponent(() =>
+  import('@/features/event-delete').then((module) => module.EventDeleteModal),
+)
+
 const store = useListStore()
 const { items, isLoading, error, retry, page, pageSize, hasNext, isVirtualized } = useEventsList()
 const { create, edit, remove } = useEventModals()
+
+onMounted(() => {
+  function warmup(): void {
+    void import('@/features/event-form')
+    void import('@/features/event-delete')
+  }
+
+  if (typeof window.requestIdleCallback === 'function') {
+    window.requestIdleCallback(warmup, { timeout: MODAL_WARMUP.IDLE_TIMEOUT_MS })
+  } else {
+    warmup()
+  }
+})
 </script>
 
 <template>

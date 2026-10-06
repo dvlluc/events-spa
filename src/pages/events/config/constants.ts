@@ -14,3 +14,5 @@ export const VIRTUALIZATION = {
 } as const
 
 export const SORT = { DEFAULT_FIELD: 'startAt', DEFAULT_ORDER: 'asc' } as const
+
+export const MODAL_WARMUP = { IDLE_TIMEOUT_MS: 2_000 } as const
