@@ -2,7 +2,14 @@
 import { computed } from 'vue'
 
 import { formatDuration, type EventItem } from '@/entities/event'
-import { BaseModal, FormField, LoadingDots } from '@/shared/ui'
+import {
+  BaseButton,
+  BaseModal,
+  FormError,
+  OutputField,
+  TextField,
+  TextareaField,
+} from '@/shared/ui'
 
 import {
   EVENT_FORM_ACTIONS,
@@ -54,73 +61,55 @@ async function onSubmit(): Promise<void> {
   <BaseModal :title="title" :busy="isSubmitting" size="wide" @close="emit('close')">
     <template #body>
       <div class="flex flex-col gap-3">
-        <p v-if="detailError" class="field-error" role="alert">{{ detailError }}</p>
-        <p v-if="submitError" class="field-error" role="alert">{{ submitError }}</p>
+        <FormError :message="detailError" />
+        <FormError :message="submitError" />
 
         <form class="flex flex-col gap-3" @submit.prevent="onSubmit">
-          <FormField :label="EVENT_FORM_LABELS.TITLE" :error="fieldError('title')">
-            <template #default="control">
-              <input
-                v-bind="control"
-                v-model="values.title"
-                type="text"
-                autocomplete="off"
-                @blur="validateField('title')"
-              />
-            </template>
-          </FormField>
+          <TextField
+            v-model="values.title"
+            :label="EVENT_FORM_LABELS.TITLE"
+            :error="fieldError('title')"
+            autocomplete="off"
+            @blur="validateField('title')"
+          />
 
-          <FormField :label="EVENT_FORM_LABELS.DESCRIPTION" :error="fieldError('description')">
-            <template #default="control">
-              <textarea
-                v-bind="control"
-                v-model="values.description"
-                @blur="validateField('description')"
-              ></textarea>
-            </template>
-          </FormField>
+          <TextareaField
+            v-model="values.description"
+            :label="EVENT_FORM_LABELS.DESCRIPTION"
+            :error="fieldError('description')"
+            @blur="validateField('description')"
+          />
 
-          <FormField :label="EVENT_FORM_LABELS.START_AT" :error="fieldError('startAt')">
-            <template #default="control">
-              <input
-                v-bind="control"
-                v-model="values.startAt"
-                type="datetime-local"
-                @blur="validateField('startAt')"
-              />
-            </template>
-          </FormField>
+          <TextField
+            v-model="values.startAt"
+            :label="EVENT_FORM_LABELS.START_AT"
+            :error="fieldError('startAt')"
+            type="datetime-local"
+            @blur="validateField('startAt')"
+          />
 
-          <FormField :label="EVENT_FORM_LABELS.END_AT" :error="fieldError('endAt')">
-            <template #default="control">
-              <input
-                v-bind="control"
-                v-model="values.endAt"
-                type="datetime-local"
-                @blur="validateField('endAt')"
-              />
-            </template>
-          </FormField>
+          <TextField
+            v-model="values.endAt"
+            :label="EVENT_FORM_LABELS.END_AT"
+            :error="fieldError('endAt')"
+            type="datetime-local"
+            @blur="validateField('endAt')"
+          />
 
-          <FormField :label="EVENT_FORM_LABELS.DURATION">
-            <template #default="control">
-              <output v-bind="control" :data-hint="isDurationHint ? '' : null">{{
-                durationText
-              }}</output>
-            </template>
-          </FormField>
+          <OutputField :label="EVENT_FORM_LABELS.DURATION" :hint="isDurationHint">{{
+            durationText
+          }}</OutputField>
         </form>
       </div>
     </template>
 
     <template #footer>
-      <button type="button" :disabled="isSubmitting" @click="onSubmit">
-        <LoadingDots v-if="isSubmitting" />
-        <span>{{ EVENT_FORM_ACTIONS.SAVE }}</span>
-      </button>
-      <button type="button" :disabled="isSubmitting" @click="emit('close')">
+      <BaseButton :loading="isSubmitting" @click="onSubmit">
+        {{ EVENT_FORM_ACTIONS.SAVE }}
+      </BaseButton>
+      <BaseButton :disabled="isSubmitting" @click="emit('close')">
         {{ EVENT_FORM_ACTIONS.CANCEL }}
-      </button>
+      </BaseButton>
     </template>
   </BaseModal>
 </template>

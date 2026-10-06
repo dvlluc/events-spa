@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted } from 'vue'
 
-import { StateMessage } from '@/shared/ui'
+import { BaseButton, StateMessage } from '@/shared/ui'
 
 import { MODAL_WARMUP } from '../config/constants'
 import { LIST_MESSAGES } from '../config/messages'
@@ -39,9 +39,9 @@ onMounted(() => {
 <template>
   <div class="flex flex-col gap-6">
     <div class="flex items-center justify-end">
-      <button type="button" data-variant="primary" @click="create.open()">
+      <BaseButton variant="primary" @click="create.open()">
         {{ LIST_MESSAGES.CREATE }}
-      </button>
+      </BaseButton>
     </div>
 
     <StateMessage v-if="isLoading" kind="loading" class="justify-center" />

@@ -3,6 +3,8 @@ import { onBeforeUnmount, onMounted, ref, useId, type VNode } from 'vue'
 
 import { UI_MESSAGES } from '@/shared/config'
 
+import BaseButton from './BaseButton.vue'
+
 const props = defineProps<{
   title: string
   busy?: boolean | undefined
@@ -62,7 +64,7 @@ function onCancel(event: Event): void {
   >
     <div class="flex items-start justify-between gap-4">
       <h2 class="text-xl font-semibold" :id="titleId">{{ title }}</h2>
-      <button type="button" :aria-label="UI_MESSAGES.CLOSE" @click="requestClose">×</button>
+      <BaseButton :aria-label="UI_MESSAGES.CLOSE" @click="requestClose">×</BaseButton>
     </div>
     <div class="mt-4"><slot name="body" /></div>
     <div v-if="$slots.footer" class="mt-6 flex justify-end gap-2">
@@ -70,3 +72,45 @@ function onCancel(event: Event): void {
     </div>
   </dialog>
 </template>
+
+<style scoped>
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@layer components {
+  dialog {
+    --modal-width: 30rem;
+
+    width: calc(100% - 2rem);
+    max-width: var(--modal-width);
+    margin: auto;
+    padding: var(--space-6);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background-color: var(--surface);
+    color: var(--text);
+  }
+
+  dialog[data-size='wide'] {
+    --modal-width: 40rem;
+  }
+
+  dialog::backdrop {
+    background-color: color-mix(in srgb, var(--text) 45%, transparent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    dialog[open],
+    dialog::backdrop {
+      animation: fade-in var(--motion-fast) ease-out;
+    }
+  }
+}
+</style>

@@ -1,5 +1,3 @@
-@use 'sass:map';
-
 // Темы задаются здесь; связано с THEME в shared/config/constants.ts — необходимо менять вместе.
 $themes: (
   light: (
@@ -28,6 +26,9 @@ $themes: (
 $radius: 0.5rem;
 $motion-fast: 150ms;
 $motion-blink: 1s;
+
+// Breakpoint для media-записей в scoped-стилях компонентов: там SCSS-переменные
+// недоступны, используется литерал 40rem — менять вместе с этим значением.
 $bp: 40rem;
 $event-row-dates-column: 9rem;
 $event-row-duration-column: 8rem;
@@ -41,10 +42,6 @@ $space: (
   6: 1.5rem,
 );
 
-@function space($step) {
-  @return map.get($space, $step);
-}
-
 @each $name, $tokens in $themes {
   :root[data-theme='#{$name}'] {
     color-scheme: $name;
@@ -52,5 +49,17 @@ $space: (
     @each $key, $value in $tokens {
       --#{$key}: #{$value};
     }
+  }
+}
+
+:root {
+  --radius: #{$radius};
+  --motion-fast: #{$motion-fast};
+  --motion-blink: #{$motion-blink};
+  --fill-subtle: #{$fill-subtle};
+  --event-row-columns: #{$event-row-columns};
+
+  @each $step, $value in $space {
+    --space-#{$step}: #{$value};
   }
 }

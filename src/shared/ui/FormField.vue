@@ -36,3 +36,19 @@ const control = computed<FormControl>(() => {
     <p v-if="error" :id="errorId" class="field-error">{{ error }}</p>
   </div>
 </template>
+
+<style scoped>
+@layer components {
+  label {
+    display: block;
+    margin-bottom: var(--space-1);
+    font-weight: 500;
+  }
+
+  .field-error {
+    margin-top: var(--space-1);
+    color: var(--danger);
+    font-size: 0.8125rem;
+  }
+}
+</style>

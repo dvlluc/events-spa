@@ -1,7 +1,7 @@
 import { afterAll, beforeAll } from 'vitest'
 
 import '@/app/styles/main.css'
-import '@/app/styles/base.scss'
+import '@/app/styles/reset.scss'
 
 import { worker } from './browser.ts'
 

@@ -79,3 +79,30 @@ const rows = computed<RowView[]>(() => {
     />
   </div>
 </template>
+
+<style scoped>
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@layer components {
+  .event-list {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background-color: var(--surface);
+    color: var(--text);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .event-list {
+      animation: fade-in var(--motion-fast) ease-out;
+    }
+  }
+}
+</style>

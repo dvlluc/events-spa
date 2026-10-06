@@ -3,6 +3,7 @@ import { computed } from 'vue'
 
 import { STATE_MESSAGES, UI_MESSAGES } from '@/shared/config'
 
+import BaseButton from './BaseButton.vue'
 import LoadingDots from './LoadingDots.vue'
 
 type StateKind = 'loading' | 'empty' | 'error'
@@ -33,8 +34,8 @@ const role = computed(() => (props.kind === 'error' ? 'alert' : 'status'))
       </template>
       <template v-else>{{ text }}</template>
     </p>
-    <button v-if="kind === 'error'" type="button" @click="emit('retry')">
+    <BaseButton v-if="kind === 'error'" @click="emit('retry')">
       {{ UI_MESSAGES.RETRY }}
-    </button>
+    </BaseButton>
   </div>
 </template>

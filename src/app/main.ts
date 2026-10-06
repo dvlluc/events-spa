@@ -4,7 +4,7 @@ import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 
 import './styles/main.css'
-import './styles/base.scss'
+import './styles/reset.scss'
 
 import App from './App.vue'
 import { createQueryClient } from './providers'

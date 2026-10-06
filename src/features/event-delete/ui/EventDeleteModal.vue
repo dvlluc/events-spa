@@ -2,7 +2,7 @@
 import { computed, shallowRef } from 'vue'
 
 import type { EventItem } from '@/entities/event'
-import { BaseModal, LoadingDots } from '@/shared/ui'
+import { BaseButton, BaseModal, FormError } from '@/shared/ui'
 
 import { EVENT_DELETE_MESSAGES } from '../config/messages'
 import { useDeleteEventMutation } from '../model/mutations'
@@ -34,19 +34,18 @@ async function onConfirm(): Promise<void> {
   <BaseModal :title="title" :busy="isPending" @close="emit('close')">
     <template #body>
       <div class="flex flex-col gap-3">
-        <p v-if="deleteError" class="field-error" role="alert">{{ deleteError }}</p>
+        <FormError :message="deleteError" />
         <p>{{ EVENT_DELETE_MESSAGES.PROMPT }}</p>
       </div>
     </template>
 
     <template #footer>
-      <button type="button" data-variant="danger" :disabled="isPending" @click="onConfirm">
-        <LoadingDots v-if="isPending" />
-        <span>{{ EVENT_DELETE_MESSAGES.CONFIRM }}</span>
-      </button>
-      <button type="button" :disabled="isPending" @click="emit('close')">
+      <BaseButton variant="danger" :loading="isPending" @click="onConfirm">
+        {{ EVENT_DELETE_MESSAGES.CONFIRM }}
+      </BaseButton>
+      <BaseButton :disabled="isPending" @click="emit('close')">
         {{ EVENT_DELETE_MESSAGES.CANCEL }}
-      </button>
+      </BaseButton>
     </template>
   </BaseModal>
 </template>
