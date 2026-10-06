@@ -62,6 +62,10 @@ export default defineConfig({
               name: 'vendor-zod',
               test: /node_modules[\\/]zod[\\/]/,
             },
+            {
+              name: 'vendor',
+              test: /node_modules[\\/]/,
+            },
           ],
         },
       },
