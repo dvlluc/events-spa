@@ -106,15 +106,13 @@ test('list: пустой массив остаётся пустым списко
   ).resolves.toEqual([])
 })
 
-test('list: нарушение контракта превращается в ContractError', async () => {
+test('list: принимает неконсистентные durationMinutes от API', async () => {
   fetchMock.mockResolvedValue(jsonResponse([{ ...event, durationMinutes: -1 }]))
 
-  const error = await failure(
-    eventsApi.list({ page: 1, limit: 10, sortBy: 'startAt', order: 'desc' }),
-  )
+  const items = await eventsApi.list({ page: 1, limit: 10, sortBy: 'startAt', order: 'desc' })
 
-  expect(error).toBeInstanceOf(ContractError)
-  expect(error).not.toBeInstanceOf(ApiError)
+  expect(items).toHaveLength(1)
+  expect(items[0]!.durationMinutes).toBe(-1)
 })
 
 test('get запрашивает /events/{id} без заголовков и валидирует ответ', async () => {

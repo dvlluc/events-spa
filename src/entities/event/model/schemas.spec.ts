@@ -23,9 +23,9 @@ test('принимает даты со сдвигом зоны, а не толь
   expect(result.success).toBe(true)
 })
 
-test('отклоняет отрицательные durationMinutes', () => {
+test('принимает отрицательные durationMinutes (неконсистентные данные с API)', () => {
   const result = EventSchema.safeParse({ ...realEvent, durationMinutes: -1 })
-  expect(result.success).toBe(false)
+  expect(result.success).toBe(true)
 })
 
 test('отклоняет дробные durationMinutes', () => {
