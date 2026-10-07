@@ -16,3 +16,5 @@ export const QUERY = {
 export const THEME = { DEFAULT: 'light', ATTRIBUTE: 'data-theme' } as const
 
 export const LOADER = { DOTS: 3 } as const
+
+export const SCROLL_LOCK = { PROPERTY: 'overflow', LOCKED_VALUE: 'hidden' } as const

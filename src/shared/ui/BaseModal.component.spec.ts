@@ -3,6 +3,8 @@ import { defineComponent, h, ref } from 'vue'
 import { render } from 'vitest-browser-vue'
 import { userEvent } from 'vitest/browser'
 
+import { SCROLL_LOCK } from '@/shared/config'
+
 import BaseModal from './BaseModal.vue'
 
 const Harness = defineComponent({
@@ -100,4 +102,21 @@ test('после закрытия фокус возвращается на вы�
   await expect.element(screen.getByRole('dialog')).not.toBeInTheDocument()
 
   await expect.element(trigger).toHaveFocus()
+})
+
+test('на время открытой модалки скролл фона заблокирован', async () => {
+  const screen = await render(Harness)
+  const body = document.body
+
+  expect(body.style[SCROLL_LOCK.PROPERTY]).toBe('')
+
+  await userEvent.click(screen.getByRole('button', { name: 'Открыть' }))
+  await expect.element(screen.getByRole('dialog')).toBeVisible()
+
+  expect(body.style[SCROLL_LOCK.PROPERTY]).toBe(SCROLL_LOCK.LOCKED_VALUE)
+
+  await userEvent.click(screen.getByRole('button', { name: 'Закрыть' }))
+  await expect.element(screen.getByRole('dialog')).not.toBeInTheDocument()
+
+  expect(body.style[SCROLL_LOCK.PROPERTY]).toBe('')
 })

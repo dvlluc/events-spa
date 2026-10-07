@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, useId, type VNode } from 'vue'
 
-import { UI_MESSAGES } from '@/shared/config'
+import { SCROLL_LOCK, UI_MESSAGES } from '@/shared/config'
 
 import BaseButton from './BaseButton.vue'
 
@@ -22,8 +22,11 @@ const dialog = ref<HTMLDialogElement | null>(null)
 const titleId = useId()
 
 let opener: HTMLElement | null = null
+let previousOverflow = ''
 
 onMounted(() => {
+  previousOverflow = document.body.style[SCROLL_LOCK.PROPERTY]
+  document.body.style[SCROLL_LOCK.PROPERTY] = SCROLL_LOCK.LOCKED_VALUE
   opener = document.activeElement instanceof HTMLElement ? document.activeElement : null
   dialog.value?.showModal()
 })
@@ -31,6 +34,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   const element = dialog.value
   if (element?.open) element.close()
+  document.body.style[SCROLL_LOCK.PROPERTY] = previousOverflow
   if (opener && document.contains(opener)) opener.focus()
 })
 
