@@ -13,8 +13,6 @@ const props = defineProps<{
 
 const emit = defineEmits<{ close: [] }>()
 
-const ESCAPE_KEY = 'Escape'
-
 defineSlots<{
   body(): VNode | VNode[]
   footer?(): VNode | VNode[]
@@ -41,10 +39,6 @@ function requestClose(): void {
   emit('close')
 }
 
-function onKeydown(event: KeyboardEvent): void {
-  if (event.key === ESCAPE_KEY && props.busy) event.preventDefault()
-}
-
 function onCancel(event: Event): void {
   if (props.busy) {
     event.preventDefault()
@@ -55,13 +49,7 @@ function onCancel(event: Event): void {
 </script>
 
 <template>
-  <dialog
-    ref="dialog"
-    :data-size="size"
-    :aria-labelledby="titleId"
-    @keydown="onKeydown"
-    @cancel="onCancel"
-  >
+  <dialog ref="dialog" :data-size="size" :aria-labelledby="titleId" @cancel="onCancel">
     <div class="flex items-start justify-between gap-4">
       <h2 class="text-xl font-semibold" :id="titleId">{{ title }}</h2>
       <BaseButton :aria-label="UI_MESSAGES.CLOSE" @click="requestClose">×</BaseButton>
