@@ -24,7 +24,6 @@ export const EVENT_FORM_ERRORS = {
   END_REQUIRED: 'Укажите дату и время окончания.',
   INVALID_DATE: 'Некорректные дата и время.',
   RANGE: 'Окончание должно быть позже начала.',
-  MIN_DURATION: (minutes: number) => `Минимальная длительность — ${minutes} мин.`,
 } as const
 
 export const EVENT_FORM_FEEDBACK = {

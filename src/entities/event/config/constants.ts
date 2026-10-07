@@ -27,8 +27,4 @@ export const EVENT_QUERY_KEY = {
   DETAIL: 'detail',
 } as const
 
-export const EVENT_SCHEMA = {
-  MIN_DURATION_MINUTES: 0,
-} as const
-
 export const EVENTS_PATH = '/events'

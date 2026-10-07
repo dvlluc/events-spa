@@ -75,15 +75,6 @@ export const EventFormSchema = z
 
       if (duration <= 0) {
         ctx.addIssue({ code: 'custom', path: ['endAt'], message: EVENT_FORM_ERRORS.RANGE })
-        return
-      }
-
-      if (duration < EVENT_VALIDATION.MIN_DURATION_MINUTES) {
-        ctx.addIssue({
-          code: 'custom',
-          path: ['endAt'],
-          message: EVENT_FORM_ERRORS.MIN_DURATION(EVENT_VALIDATION.MIN_DURATION_MINUTES),
-        })
       }
     }),
   )
