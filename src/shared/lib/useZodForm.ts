@@ -1,4 +1,4 @@
-import { reactive, shallowRef, watch } from 'vue'
+import { reactive, shallowRef } from 'vue'
 import { z, type ZodMiniType } from 'zod/v4-mini'
 
 export type FormErrors<Values> = {
@@ -49,25 +49,6 @@ export function useZodForm<Values extends object>(
     errors.value = emptyErrors<Values>()
     isSubmitting.value = false
   }
-
-  watch(
-    () => ({ ...values }),
-    (next, previous) => {
-      const changed = (Object.keys(next) as FieldName<Values>[]).filter(
-        (key) => !Object.is(next[key], previous[key]),
-      )
-      if (changed.length === 0) return
-      const fieldErrors = { ...errors.value.fieldErrors }
-      let cleared = false
-      for (const key of changed) {
-        if (key in fieldErrors) {
-          delete fieldErrors[key]
-          cleared = true
-        }
-      }
-      if (cleared) errors.value = { formErrors: errors.value.formErrors, fieldErrors }
-    },
-  )
 
   return {
     values,

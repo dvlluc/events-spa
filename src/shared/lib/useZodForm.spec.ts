@@ -53,7 +53,7 @@ test('validateField() не трогает ошибки других полей',
   expect(form.errors.value.fieldErrors.title).toEqual(['Не короче 3 символов'])
 })
 
-test('ошибка поля снимается при вводе, ошибки соседних полей остаются', async () => {
+test('ошибка поля НЕ снимается при вводе, а только при validateField()', async () => {
   const form = createForm()
   form.validate()
   expect(form.errors.value.fieldErrors.title).toBeDefined()
@@ -62,6 +62,9 @@ test('ошибка поля снимается при вводе, ошибки �
 
   await nextTick()
 
+  expect(form.errors.value.fieldErrors.title).toBeDefined()
+
+  expect(form.validateField('title')).toBe(true)
   expect(form.errors.value.fieldErrors.title).toBeUndefined()
   expect(form.errors.value.fieldErrors.note).toEqual(['Заполните заметку'])
 })
