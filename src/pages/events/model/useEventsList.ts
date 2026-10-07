@@ -56,6 +56,7 @@ export function useEventsList() {
     () => [listQuery.data.value, listQuery.isPlaceholderData.value] as const,
     ([data, isPlaceholder]) => {
       if (data === undefined || isPlaceholder || data.length > 0) return
+      if (store.userInitiatedPageChange()) return
       if (store.page > PAGINATION.DEFAULT_PAGE) store.setPage(store.page - 1)
     },
   )

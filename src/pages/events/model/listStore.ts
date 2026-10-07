@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 
 import { PAGINATION } from '../config/constants'
 
@@ -18,16 +18,31 @@ function normalizePage(value: number): number {
 export const useListStore = defineStore('events-list', () => {
   const page = ref<number>(PAGINATION.DEFAULT_PAGE)
   const pageSize = ref<number>(PAGINATION.DEFAULT_PAGE_SIZE)
+  let userInitiatedPageChange = false
 
   function setPage(value: number): void {
+    userInitiatedPageChange = true
     page.value = normalizePage(value)
+    nextTick(() => {
+      userInitiatedPageChange = false
+    })
   }
 
   function setPageSize(value: number): void {
     if (!isPageSize(value)) return
+    userInitiatedPageChange = true
     pageSize.value = value
     page.value = PAGINATION.DEFAULT_PAGE
+    nextTick(() => {
+      userInitiatedPageChange = false
+    })
   }
 
-  return { page, pageSize, setPage, setPageSize }
+  return {
+    page,
+    pageSize,
+    setPage,
+    setPageSize,
+    userInitiatedPageChange: () => userInitiatedPageChange,
+  }
 })

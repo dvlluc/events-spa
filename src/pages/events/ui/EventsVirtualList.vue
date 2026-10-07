@@ -33,7 +33,7 @@ const spacerStyle = computed<StyleValue>(() => ({
   height: `${virtualizer.value.getTotalSize()}px`,
 }))
 
-type RowView = { key: number; event: EventItem; positionStyle: StyleValue }
+type RowView = { key: string; event: EventItem; positionStyle: StyleValue }
 
 const measureRow: RowMeasure = (element) => {
   if (element instanceof HTMLElement) {
@@ -49,7 +49,7 @@ const rows = computed<RowView[]>(() => {
     const event = props.items[item.index]
     if (!event) continue
     view.push({
-      key: item.index,
+      key: event.id,
       event,
       positionStyle: {
         position: 'absolute',
