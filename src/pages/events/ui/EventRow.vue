@@ -29,31 +29,37 @@ const rowStyle = computed<StyleValue>(() => {
 
 <template>
   <div
-    class="event-row grid grid-cols-[var(--event-row-columns)] items-center gap-4 p-3 text-left max-[40rem]:flex max-[40rem]:flex-wrap max-[40rem]:items-start max-[40rem]:gap-x-4 max-[40rem]:gap-y-1 max-[40rem]:px-2 max-[40rem]:py-1"
+    class="event-row grid grid-cols-[var(--event-row-columns)] items-center gap-4 p-3 text-left max-[40rem]:flex max-[40rem]:flex-wrap max-[40rem]:items-start max-[40rem]:gap-2"
     role="listitem"
     :style="rowStyle"
     :ref="measure"
   >
-    <div
-      class="event-row-main min-w-0 max-[40rem]:shrink-0 max-[40rem]:grow max-[40rem]:basis-full"
-    >
-      <p class="event-row-title m-0 font-semibold max-[40rem]:truncate">{{ event.title }}</p>
+    <div class="event-row-main min-w-0 max-[40rem]:basis-full">
+      <p class="event-row-title m-0 font-semibold max-[40rem]:line-clamp-2">
+        {{ event.title }}
+      </p>
       <p class="event-row-description m-0 line-clamp-2">{{ event.description }}</p>
     </div>
     <p
-      class="event-row-dates m-0 flex flex-col items-start px-2 py-1 text-[0.8125rem] leading-[1.35] whitespace-nowrap tabular-nums max-[40rem]:px-1 max-[40rem]:py-0"
+      class="event-row-dates m-0 flex flex-col items-start px-2 py-1 text-[0.8125rem] leading-[1.35] whitespace-nowrap tabular-nums"
     >
       <time :datetime="event.startAt">{{ formatDateTime(event.startAt) }}</time>
       <time :datetime="event.endAt">{{ formatDateTime(event.endAt) }}</time>
     </p>
     <p
-      class="event-row-duration m-0 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap tabular-nums max-[40rem]:text-[0.8125rem]"
+      class="event-row-duration m-0 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap tabular-nums max-[40rem]:ml-auto max-[40rem]:text-[0.8125rem]"
     >
       {{ formatDuration(event.durationMinutes) }}
     </p>
-    <div class="event-row-actions flex gap-2">
-      <BaseButton @click="emit('edit', event)">{{ LIST_MESSAGES.EDIT }}</BaseButton>
-      <BaseButton variant="danger" @click="emit('delete', event)">
+    <div class="event-row-actions flex gap-2 max-[40rem]:basis-full">
+      <BaseButton class="max-[40rem]:min-h-11 max-[40rem]:flex-1" @click="emit('edit', event)">
+        {{ LIST_MESSAGES.EDIT }}
+      </BaseButton>
+      <BaseButton
+        class="max-[40rem]:min-h-11 max-[40rem]:flex-1"
+        variant="danger"
+        @click="emit('delete', event)"
+      >
         {{ LIST_MESSAGES.DELETE }}
       </BaseButton>
     </div>
@@ -84,13 +90,6 @@ const rowStyle = computed<StyleValue>(() => {
 
   .event-row-duration {
     color: var(--muted);
-  }
-
-  @media (width <= 40rem) {
-    .event-row-actions button {
-      padding: var(--space-1) var(--space-2);
-      font-size: 0.8125rem;
-    }
   }
 }
 </style>
