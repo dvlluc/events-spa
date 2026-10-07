@@ -6,6 +6,8 @@ const DEFAULT_API_BASE_URL = 'http://localhost:3000/api/v1'
 const PREVIEW_PORT = 4173
 const PREVIEW_URL = `http://localhost:${PREVIEW_PORT}`
 
+const E2E_OUT_DIR = 'dist-e2e'
+
 export default defineConfig({
   testDir: './e2e',
   timeout: 30 * 1000,
@@ -37,8 +39,9 @@ export default defineConfig({
   ],
 
   webServer: {
-    /* Продакшн-сборка в режиме e2e (в бандле есть MSW) + preview-сервер. */
-    command: `pnpm exec vite build --mode e2e && pnpm exec vite preview --port ${PREVIEW_PORT} --strictPort`,
+    /* Продакшн-сборка в режиме e2e (в бандле есть MSW) в отдельный dist-e2e,
+       чтобы не затирать обычный dist/ + preview-сервер оттуда же. */
+    command: `pnpm exec vite build --mode e2e --outDir ${E2E_OUT_DIR} && pnpm exec vite preview --outDir ${E2E_OUT_DIR} --port ${PREVIEW_PORT} --strictPort`,
     url: PREVIEW_URL,
     env: { VITE_API_BASE_URL: process.env.VITE_API_BASE_URL ?? DEFAULT_API_BASE_URL },
     timeout: 120 * 1000,

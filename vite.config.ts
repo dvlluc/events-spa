@@ -5,8 +5,6 @@ import { codeSplitting } from './vite/code-splitting.ts'
 import { output } from './vite/output.ts'
 import { plugins } from './vite/plugins.ts'
 
-export { aliases }
-
 export default defineConfig({
   plugins,
   resolve: {

@@ -17,7 +17,14 @@ const TAILWIND_AT_RULES = [
 /** @type {import('stylelint').Config} */
 export default {
   extends: ['stylelint-config-standard-scss', 'stylelint-config-recommended-vue/scss'],
-  ignoreFiles: ['**/node_modules/**', 'dist/**', 'coverage/**', 'public/**', 'test-results/**'],
+  ignoreFiles: [
+    '**/node_modules/**',
+    'dist/**',
+    'dist-e2e/**',
+    'coverage/**',
+    'public/**',
+    'test-results/**',
+  ],
   rules: {
     'at-rule-no-unknown': [true, { ignoreAtRules: TAILWIND_AT_RULES }],
     'scss/at-rule-no-unknown': [true, { ignoreAtRules: TAILWIND_AT_RULES }],
