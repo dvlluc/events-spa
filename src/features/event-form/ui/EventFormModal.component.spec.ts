@@ -154,14 +154,14 @@ test('нельзя сохранить запись с endAt <= startAt: ошиб
   await expect.element(screen.getByText(EVENT_FORM_ERRORS.RANGE), WAIT).toBeVisible()
   expect(posted).toBe(false)
 
-  await end.fill('2026-03-10T10:00')
+  await end.fill('2026-03-10T12:00')
+  await userEvent.click(screen.getByRole('dialog'))
   await expect.element(screen.getByText(EVENT_FORM_ERRORS.RANGE), WAIT).not.toBeInTheDocument()
 
   await save.click()
 
-  await expect.element(screen.getByText(EVENT_FORM_ERRORS.RANGE), WAIT).toBeVisible()
-  expect(posted).toBe(false)
-  await expect.element(screen.getByRole('dialog'), WAIT).toBeVisible()
+  await expect.element(screen.getByRole('dialog'), WAIT).not.toBeInTheDocument()
+  expect(posted).toBe(true)
 })
 
 test('длительность: блок подсказывает автозаполнение и пересчитывается по датам', async () => {

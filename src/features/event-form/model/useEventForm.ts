@@ -50,6 +50,7 @@ export function useEventForm(mode: EventFormMode, event: EventItem | null = null
 
   const initialValues = rowToValues(mode === 'edit' ? (detailQuery.data.value ?? event) : null)
   let snapshot: EventFormValues = { ...initialValues }
+  let hasUserInteracted = false
 
   const form = useZodForm(EventFormSchema, initialValues)
   const createMutation = useCreateEventMutation()
@@ -81,10 +82,16 @@ export function useEventForm(mode: EventFormMode, event: EventItem | null = null
     )
   }
 
+  const originalValidateField = form.validateField
+  form.validateField = (name) => {
+    hasUserInteracted = true
+    return originalValidateField(name)
+  }
+
   watch(
     () => detailQuery.data.value,
     (fresh) => {
-      if (mode !== 'edit' || !fresh || !isPristine()) return
+      if (mode !== 'edit' || !fresh || !isPristine() || hasUserInteracted) return
       Object.assign(form.values, rowToValues(fresh))
       snapshot = { ...form.values }
       void nextTick(() => {
